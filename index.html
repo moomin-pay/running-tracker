@@ -1622,7 +1622,7 @@
 
       let currentMonthView = currentMonthKey();
 
-      function changeMonth(dir) {
+      async function changeMonth(dir) {
         const [y, m] = currentMonthView.split('-').map(Number);
         const d = new Date(y, m - 1 + dir, 1);
         currentMonthView = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
