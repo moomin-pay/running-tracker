@@ -556,7 +556,7 @@
       SHIMPEI<br>RUNS</div>
     <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:8px;">Running
       Tracker</div>
-    <button onclick="loginWithGoogle()"
+    <button id="btn-login"
       style="background:white;color:#000;border:none;padding:12px 28px;font-size:14px;font-family:'Noto Sans JP',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;border-radius:2px;">
       <svg width="18" height="18" viewBox="0 0 18 18">
         <path fill="#4285F4"
@@ -576,14 +576,14 @@
 
     <nav>
       <div class="nav-logo">SHIMPEI<br>RUNS</div>
-      <div class="nav-tab active" id="tab-dashboard" onclick="showPage('dashboard')">TODAY</div>
-      <div class="nav-tab" id="tab-menu" onclick="showPage('menu')">MENU</div>
-      <div class="nav-tab" id="tab-log" onclick="showPage('log')">LOG</div>
-      <div class="nav-tab" id="tab-monthly" onclick="showPage('monthly')">MONTHLY</div>
-      <div class="nav-tab" id="tab-phase" onclick="showPage('phase')">PHASE</div>
+      <div class="nav-tab active" id="tab-dashboard" data-page="dashboard">TODAY</div>
+      <div class="nav-tab" id="tab-menu" data-page="menu">MENU</div>
+      <div class="nav-tab" id="tab-log" data-page="log">LOG</div>
+      <div class="nav-tab" id="tab-monthly" data-page="monthly">MONTHLY</div>
+      <div class="nav-tab" id="tab-phase" data-page="phase">PHASE</div>
       <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0;padding-left:12px;">
         <span id="user-name" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);"></span>
-        <button onclick="logout()"
+        <button id="btn-logout"
           style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 10px;cursor:pointer;">LOGOUT</button>
       </div>
     </nav>
@@ -652,7 +652,7 @@
         <div class="form-row single">
           <div><label>メモ</label><input type="text" id="q-memo" placeholder="体調、気温など"></div>
         </div>
-        <button class="btn btn-primary" onclick="quickLog()">記録する</button>
+        <button class="btn btn-primary" id="btn-quicklog">記録する</button>
       </div>
       <div class="card">
         <div class="card-title">直近のラン</div>
@@ -917,12 +917,12 @@
         <div class="form-row single">
           <div><label>メモ</label><textarea id="l-memo" placeholder="体調・気温・コースなど"></textarea></div>
         </div>
-        <button class="btn btn-primary" onclick="addLog()">記録を追加</button>
+        <button class="btn btn-primary" id="btn-addlog">記録を追加</button>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-        <select id="log-f-month" onchange="await renderLogTable()"
+        <select id="log-f-month"
           style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;"></select>
-        <select id="log-f-type" onchange="await renderLogTable()"
+        <select id="log-f-type"
           style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;">
           <option value="">全タイプ</option>
           <option value="easy">イージー</option>
@@ -941,10 +941,10 @@
     <!-- MONTHLY -->
     <div class="page" id="page-monthly">
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
-        <button class="btn btn-ghost" onclick="changeMonth(-1)">◀</button>
+        <button class="btn btn-ghost" id="btn-prev-month">◀</button>
         <div id="m-title"
           style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;flex:1;text-align:center;"></div>
-        <button class="btn btn-ghost" onclick="changeMonth(1)">▶</button>
+        <button class="btn btn-ghost" id="btn-next-month">▶</button>
       </div>
       <div class="grid3" style="margin-bottom:12px;">
         <div class="stat">
@@ -972,7 +972,7 @@
           <textarea id="m-memo" placeholder="今月の振り返りを記録..."></textarea>
         </div>
         <button class="btn btn-primary" style="margin-top:8px;font-size:10px;padding:8px 16px;"
-          onclick="saveMonthlyCheck()">保存</button>
+          id="btn-save-monthly">保存</button>
       </div>
       <div class="card" style="padding:0;overflow-x:auto;">
         <div
@@ -1073,6 +1073,12 @@
       const auth = getAuth(app);
       const db = getFirestore(app);
 
+      // ログインボタンのイベント（DOM準備完了後）
+      window.addEventListener('DOMContentLoaded', () => {
+        const lb = document.getElementById('btn-login');
+        if (lb) lb.onclick = () => loginWithGoogle();
+      });
+
       let currentUser = null;
 
       // ── AUTH STATE ──
@@ -1083,7 +1089,7 @@
           document.getElementById('app-screen').style.display = 'block';
           document.getElementById('user-name').textContent = user.displayName || user.email;
           await migrateLocalStorageToFirestore(); // 既存のローカルデータがあれば移行
-          window.__appInit();                     // メインアプリ初期化
+          await window.__appInit();               // メインアプリ初期化
         } else {
           document.getElementById('auth-screen').style.display = 'flex';
           document.getElementById('app-screen').style.display = 'none';
@@ -1180,9 +1186,6 @@
         localStorage.removeItem('sr_monthly');
         localStorage.removeItem('sr_seed_version');
       }
-    </script>
-
-    <script type="module">
       // ═══ DATA ═══════════════════════════════════════════
 
       const PHASES = [
@@ -1779,6 +1782,24 @@
       // Firebase認証後に呼ばれる（firebase scriptの onAuthStateChanged から window.__appInit() で実行）
 
       window.__appInit = async function () {
+        // ── イベントハンドラ登録（onclick属性の代わり）──
+        document.querySelectorAll('.nav-tab[data-page]').forEach(tab => {
+          tab.addEventListener('click', () => showPage(tab.dataset.page));
+        });
+        const bind = (id, fn) => { const el = document.getElementById(id); if (el) el.onclick = fn; };
+        bind('btn-logout', () => logout());
+        bind('btn-quicklog', () => quickLog());
+        bind('btn-addlog', () => addLog());
+        bind('btn-prev-month', () => changeMonth(-1));
+        bind('btn-next-month', () => changeMonth(1));
+        bind('btn-save-monthly', () => saveMonthlyCheck());
+
+        // セレクトのchangeイベント
+        const mf = document.getElementById('log-f-month');
+        const tf = document.getElementById('log-f-type');
+        if (mf) mf.onchange = () => renderLogTable();
+        if (tf) tf.onchange = () => renderLogTable();
+
         const t = todayStr();
         document.getElementById('q-date').value = t;
         document.getElementById('l-date').value = t;
