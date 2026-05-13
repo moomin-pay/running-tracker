@@ -1567,7 +1567,7 @@
 
       async function deleteLog(id) {
         if (!confirm('この記録を削除しますか？')) return;
-        await saveLogs(await getLogs().filter(l => l.id !== id));
+        await saveLogs((await getLogs()).filter(l => l.id !== id));
         await populateMonthFilter();
         await renderLogTable();
         toast('削除しました');
@@ -1635,7 +1635,7 @@
         const [y] = mk.split('-').map(Number);
         document.getElementById('m-title').textContent = `${y}年 ${tgt ? tgt.label : mk}`;
 
-        const logs = await getLogs().filter(l => monthKey(l.date) === mk);
+        const logs = (await getLogs()).filter(l => monthKey(l.date) === mk);
         const totalKm = logs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
         const paces = logs.map(l => paceToSec(l.pace)).filter(Boolean);
         const avgPace = paces.length ? Math.round(paces.reduce((a, b) => a + b, 0) / paces.length) : null;
