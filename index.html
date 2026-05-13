@@ -1,714 +1,1402 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shimpei Runs — Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg:#0a0a0a; --s1:#111; --s2:#1a1a1a; --s3:#222;
-  --border:#2a2a2a; --accent:#e8ff47; --a2:#ff6b35; --a3:#47c8ff;
-  --text:#f0f0f0; --muted:#666;
-  --p1:#47c8ff; --p2:#ff6b35; --p3:#a78bfa; --p4:#e8ff47; --p5:#4ade80;
-  --green:#4ade80; --red:#f87171;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shimpei Runs — Tracker</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --s1: #111;
+      --s2: #1a1a1a;
+      --s3: #222;
+      --border: #2a2a2a;
+      --accent: #e8ff47;
+      --a2: #ff6b35;
+      --a3: #47c8ff;
+      --text: #f0f0f0;
+      --muted: #666;
+      --p1: #47c8ff;
+      --p2: #ff6b35;
+      --p3: #a78bfa;
+      --p4: #e8ff47;
+      --p5: #4ade80;
+      --green: #4ade80;
+      --red: #f87171;
+    }
 
-nav{position:sticky;top:0;z-index:100;background:#0a0a0aee;backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;overflow-x:auto;}
-.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--accent);padding:14px 16px 14px 0;border-right:1px solid var(--border);margin-right:4px;letter-spacing:1px;white-space:nowrap;flex-shrink:0;}
-.nav-tab{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;padding:14px 14px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;flex-shrink:0;}
-.nav-tab:hover{color:var(--text);}
-.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.page{display:none;padding:20px;max-width:960px;margin:0 auto;}
-.page.active{display:block;}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
 
-.card{background:var(--s1);border:1px solid var(--border);padding:18px;margin-bottom:12px;}
-.card-title{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:14px;}
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #0a0a0aee;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      overflow-x: auto;
+    }
 
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-@media(max-width:600px){.grid2{grid-template-columns:1fr 1fr;}.grid3,.grid4{grid-template-columns:1fr 1fr;}}
-@media(max-width:380px){.grid2,.grid3,.grid4{grid-template-columns:1fr;}}
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      color: var(--accent);
+      padding: 14px 16px 14px 0;
+      border-right: 1px solid var(--border);
+      margin-right: 4px;
+      letter-spacing: 1px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
-.stat{background:var(--s2);padding:12px 14px;}
-.stat-label{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:1px;margin-bottom:4px;}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
-.stat-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+    .nav-tab {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 14px 14px;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
 
-.phase-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;padding:3px 10px;border:1px solid currentColor;margin-bottom:8px;}
+    .nav-tab:hover {
+      color: var(--text);
+    }
 
-.prog-wrap{background:var(--s3);height:5px;margin:6px 0;}
-.prog-bar{height:5px;transition:width .6s ease;}
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
 
-.tbl{width:100%;border-collapse:collapse;font-size:12px;}
-.tbl th{background:var(--s2);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);}
-.tbl td{padding:8px 10px;border-bottom:1px solid #161616;vertical-align:middle;}
-.tbl tr:last-child td{border-bottom:none;}
-.tbl tr:hover td{background:#141414;}
-.today-row td{background:#161606 !important;}
+    .page {
+      display: none;
+      padding: 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
 
-.mtag{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;padding:2px 6px;display:inline-block;white-space:nowrap;}
-.mtag-easy{background:#1a3a2a;color:#4ade80;}
-.mtag-tempo{background:#2a2a1a;color:#e8ff47;}
-.mtag-fartlek{background:#2a1a2a;color:#c084fc;}
-.mtag-long{background:#1a2a3a;color:#47c8ff;}
-.mtag-race{background:#3a1a1a;color:#ff6b35;}
-.mtag-interval{background:#3a2010;color:#fb923c;}
-.mtag-rest{background:#1e1e1e;color:#666;}
-.mtag-race_event{background:#2a0a0a;color:#f87171;}
+    .page.active {
+      display: block;
+    }
 
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-.form-row.single{grid-template-columns:1fr;}
-@media(max-width:480px){.form-row{grid-template-columns:1fr;}}
-label{font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;color:var(--muted);display:block;margin-bottom:4px;}
-input,select,textarea{width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-size:13px;padding:8px 10px;outline:none;transition:border-color .2s;}
-input:focus,select:focus,textarea:focus{border-color:var(--accent);}
-textarea{resize:vertical;min-height:60px;}
-select option{background:var(--s2);}
+    .card {
+      background: var(--s1);
+      border: 1px solid var(--border);
+      padding: 18px;
+      margin-bottom: 12px;
+    }
 
-.btn{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;padding:10px 20px;cursor:pointer;border:none;transition:all .2s;}
-.btn-primary{background:var(--accent);color:#000;font-weight:600;}
-.btn-primary:hover{background:#d4e840;}
-.btn-danger{background:transparent;border:1px solid var(--red);color:var(--red);font-size:10px;padding:4px 8px;}
-.btn-danger:hover{background:var(--red);color:#000;}
-.btn-ghost{background:var(--s2);color:var(--text);border:1px solid var(--border);font-size:10px;padding:6px 14px;}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+    .card-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
 
-.note{background:#1a1a0a;border-left:3px solid var(--accent);padding:10px 14px;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin:10px 0;}
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
 
-.check-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #161616;cursor:pointer;font-size:13px;user-select:none;}
-.check-item:last-child{border-bottom:none;}
-.check-box{width:16px;height:16px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
-.check-box.checked{background:var(--accent);border-color:var(--accent);}
-.check-box.checked::after{content:'✓';color:#000;font-size:10px;font-weight:700;}
-.check-text.checked{color:var(--muted);text-decoration:line-through;}
+    .grid3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
 
-.timeline{position:relative;padding-left:20px;}
-.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--border);}
-.tl-item{position:relative;padding:0 0 18px 16px;}
-.tl-item::before{content:'';position:absolute;left:-14px;top:4px;width:8px;height:8px;border-radius:50%;background:var(--border);border:2px solid var(--bg);}
-.tl-item.active::before{background:var(--accent);}
-.tl-item.done::before{background:var(--green);}
+    .grid4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
 
-.toast{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#000;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:10px 18px;transform:translateY(80px);opacity:0;transition:all .3s;z-index:999;}
-.toast.show{transform:translateY(0);opacity:1;}
+    @media(max-width:600px) {
+      .grid2 {
+        grid-template-columns: 1fr 1fr;
+      }
 
-.sec-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;margin:20px 0 14px;display:flex;align-items:center;gap:12px;}
-.sec-title::after{content:'';flex:1;height:1px;background:var(--border);}
-.phase-header{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;margin:20px 0 10px;}
+      .grid3,
+      .grid4 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
 
-::-webkit-scrollbar{width:4px;height:4px;}
-::-webkit-scrollbar-track{background:var(--bg);}
-::-webkit-scrollbar-thumb{background:var(--border);}
-.empty{text-align:center;padding:32px;color:var(--muted);font-size:13px;}
-</style>
+    @media(max-width:380px) {
+
+      .grid2,
+      .grid3,
+      .grid4 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat {
+      background: var(--s2);
+      padding: 12px 14px;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .stat-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .phase-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 2px;
+      padding: 3px 10px;
+      border: 1px solid currentColor;
+      margin-bottom: 8px;
+    }
+
+    .prog-wrap {
+      background: var(--s3);
+      height: 5px;
+      margin: 6px 0;
+    }
+
+    .prog-bar {
+      height: 5px;
+      transition: width .6s ease;
+    }
+
+    .tbl {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .tbl th {
+      background: var(--s2);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tbl td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #161616;
+      vertical-align: middle;
+    }
+
+    .tbl tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tbl tr:hover td {
+      background: #141414;
+    }
+
+    .today-row td {
+      background: #161606 !important;
+    }
+
+    .mtag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 6px;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .mtag-easy {
+      background: #1a3a2a;
+      color: #4ade80;
+    }
+
+    .mtag-tempo {
+      background: #2a2a1a;
+      color: #e8ff47;
+    }
+
+    .mtag-fartlek {
+      background: #2a1a2a;
+      color: #c084fc;
+    }
+
+    .mtag-long {
+      background: #1a2a3a;
+      color: #47c8ff;
+    }
+
+    .mtag-race {
+      background: #3a1a1a;
+      color: #ff6b35;
+    }
+
+    .mtag-interval {
+      background: #3a2010;
+      color: #fb923c;
+    }
+
+    .mtag-rest {
+      background: #1e1e1e;
+      color: #666;
+    }
+
+    .mtag-race_event {
+      background: #2a0a0a;
+      color: #f87171;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .form-row.single {
+      grid-template-columns: 1fr;
+    }
+
+    @media(max-width:480px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1px;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: var(--s2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 13px;
+      padding: 8px 10px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    select option {
+      background: var(--s2);
+    }
+
+    .btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      transition: all .2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: #d4e840;
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      font-size: 10px;
+      padding: 4px 8px;
+    }
+
+    .btn-danger:hover {
+      background: var(--red);
+      color: #000;
+    }
+
+    .btn-ghost {
+      background: var(--s2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 10px;
+      padding: 6px 14px;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .note {
+      background: #1a1a0a;
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      margin: 10px 0;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #161616;
+      cursor: pointer;
+      font-size: 13px;
+      user-select: none;
+    }
+
+    .check-item:last-child {
+      border-bottom: none;
+    }
+
+    .check-box {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+
+    .check-box.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .check-box.checked::after {
+      content: '✓';
+      color: #000;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .check-text.checked {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .tl-item {
+      position: relative;
+      padding: 0 0 18px 16px;
+    }
+
+    .tl-item::before {
+      content: '';
+      position: absolute;
+      left: -14px;
+      top: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      border: 2px solid var(--bg);
+    }
+
+    .tl-item.active::before {
+      background: var(--accent);
+    }
+
+    .tl-item.done::before {
+      background: var(--green);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent);
+      color: #000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 10px 18px;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all .3s;
+      z-index: 999;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .sec-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      margin: 20px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sec-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .phase-header {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px;
+      letter-spacing: 1px;
+      margin: 20px 0 10px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ログイン画面 -->
-<div id="auth-screen" style="display:flex;min-height:100vh;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:20px;">
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--accent);letter-spacing:2px;">SHIMPEI<br>RUNS</div>
-  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:8px;">Running Tracker</div>
-  <button onclick="loginWithGoogle()" style="background:white;color:#000;border:none;padding:12px 28px;font-size:14px;font-family:'Noto Sans JP',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;border-radius:2px;">
-    <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"/></svg>
-    Googleでログイン
-  </button>
-</div>
-
-<!-- アプリ本体 -->
-<div id="app-screen" style="display:none;">
-
-<nav>
-  <div class="nav-logo">SHIMPEI<br>RUNS</div>
-  <div class="nav-tab active" id="tab-dashboard" onclick="showPage('dashboard')">TODAY</div>
-  <div class="nav-tab"        id="tab-menu"      onclick="showPage('menu')">MENU</div>
-  <div class="nav-tab"        id="tab-log"       onclick="showPage('log')">LOG</div>
-  <div class="nav-tab"        id="tab-monthly"   onclick="showPage('monthly')">MONTHLY</div>
-  <div class="nav-tab"        id="tab-phase"     onclick="showPage('phase')">PHASE</div>
-  <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0;padding-left:12px;">
-    <span id="user-name" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);"></span>
-    <button onclick="logout()" style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 10px;cursor:pointer;">LOGOUT</button>
+  <!-- ログイン画面 -->
+  <div id="auth-screen"
+    style="display:flex;min-height:100vh;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:20px;">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--accent);letter-spacing:2px;">
+      SHIMPEI<br>RUNS</div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:8px;">Running
+      Tracker</div>
+    <button onclick="loginWithGoogle()"
+      style="background:white;color:#000;border:none;padding:12px 28px;font-size:14px;font-family:'Noto Sans JP',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:10px;border-radius:2px;">
+      <svg width="18" height="18" viewBox="0 0 18 18">
+        <path fill="#4285F4"
+          d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z" />
+        <path fill="#34A853"
+          d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z" />
+        <path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18z" />
+        <path fill="#EA4335"
+          d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z" />
+      </svg>
+      Googleでログイン
+    </button>
   </div>
-</nav>
 
-<div class="toast" id="toast"></div>
+  <!-- アプリ本体 -->
+  <div id="app-screen" style="display:none;">
 
-<!-- TODAY -->
-<div class="page active" id="page-dashboard">
-  <div id="dash-phase-card" class="card"></div>
-  <div class="grid4" style="margin-bottom:12px;">
-    <div class="stat"><div class="stat-label">今月の距離</div><div class="stat-val" id="d-mon-km" style="color:var(--accent)">0.0</div><div class="stat-sub">km</div></div>
-    <div class="stat"><div class="stat-label">月間目標(上限)</div><div class="stat-val" id="d-mon-tgt" style="color:var(--muted)">—</div><div class="stat-sub">km</div></div>
-    <div class="stat"><div class="stat-label">今週のラン</div><div class="stat-val" id="d-wk-cnt" style="color:var(--a3)">0</div><div class="stat-sub">回</div></div>
-    <div class="stat"><div class="stat-label">今週の距離</div><div class="stat-val" id="d-wk-km" style="color:var(--a3)">0.0</div><div class="stat-sub">km</div></div>
-  </div>
-  <div class="card">
-    <div class="card-title">今月の進捗</div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">
-      <span id="d-prog-lbl" style="color:var(--muted)">0 / 0 km</span>
-      <span id="d-prog-pct" style="font-family:'JetBrains Mono',monospace;color:var(--accent)">0%</span>
+    <nav>
+      <div class="nav-logo">SHIMPEI<br>RUNS</div>
+      <div class="nav-tab active" id="tab-dashboard" onclick="showPage('dashboard')">TODAY</div>
+      <div class="nav-tab" id="tab-menu" onclick="showPage('menu')">MENU</div>
+      <div class="nav-tab" id="tab-log" onclick="showPage('log')">LOG</div>
+      <div class="nav-tab" id="tab-monthly" onclick="showPage('monthly')">MONTHLY</div>
+      <div class="nav-tab" id="tab-phase" onclick="showPage('phase')">PHASE</div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0;padding-left:12px;">
+        <span id="user-name" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);"></span>
+        <button onclick="logout()"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;background:transparent;border:1px solid var(--border);color:var(--muted);padding:4px 10px;cursor:pointer;">LOGOUT</button>
+      </div>
+    </nav>
+
+    <div class="toast" id="toast"></div>
+
+    <!-- TODAY -->
+    <div class="page active" id="page-dashboard">
+      <div id="dash-phase-card" class="card"></div>
+      <div class="grid4" style="margin-bottom:12px;">
+        <div class="stat">
+          <div class="stat-label">今月の距離</div>
+          <div class="stat-val" id="d-mon-km" style="color:var(--accent)">0.0</div>
+          <div class="stat-sub">km</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">月間目標(上限)</div>
+          <div class="stat-val" id="d-mon-tgt" style="color:var(--muted)">—</div>
+          <div class="stat-sub">km</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">今週のラン</div>
+          <div class="stat-val" id="d-wk-cnt" style="color:var(--a3)">0</div>
+          <div class="stat-sub">回</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">今週の距離</div>
+          <div class="stat-val" id="d-wk-km" style="color:var(--a3)">0.0</div>
+          <div class="stat-sub">km</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">今月の進捗</div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">
+          <span id="d-prog-lbl" style="color:var(--muted)">0 / 0 km</span>
+          <span id="d-prog-pct" style="font-family:'JetBrains Mono',monospace;color:var(--accent)">0%</span>
+        </div>
+        <div class="prog-wrap">
+          <div class="prog-bar" id="d-prog-bar" style="width:0%;background:var(--accent)"></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="d-prog-note"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">今日のメニュー</div>
+        <div id="d-today-menu"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">クイック記録</div>
+        <div class="form-row">
+          <div><label>日付</label><input type="date" id="q-date"></div>
+          <div><label>距離 (km)</label><input type="number" id="q-dist" placeholder="6.5" step="0.1" min="0"></div>
+        </div>
+        <div class="form-row">
+          <div><label>ペース (例: 7'30")</label><input type="text" id="q-pace" placeholder="7'30&quot;"></div>
+          <div><label>メニュータイプ</label>
+            <select id="q-type">
+              <option value="easy">イージーラン</option>
+              <option value="tempo">テンポ走</option>
+              <option value="long">ロング走</option>
+              <option value="race">レースペース走</option>
+              <option value="interval">インターバル</option>
+              <option value="race_event">大会</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div><label>メモ</label><input type="text" id="q-memo" placeholder="体調、気温など"></div>
+        </div>
+        <button class="btn btn-primary" onclick="quickLog()">記録する</button>
+      </div>
+      <div class="card">
+        <div class="card-title">直近のラン</div>
+        <div id="d-recent"></div>
+      </div>
     </div>
-    <div class="prog-wrap"><div class="prog-bar" id="d-prog-bar" style="width:0%;background:var(--accent)"></div></div>
-    <div style="font-size:11px;color:var(--muted);margin-top:6px;" id="d-prog-note"></div>
-  </div>
-  <div class="card">
-    <div class="card-title">今日のメニュー</div>
-    <div id="d-today-menu"></div>
-  </div>
-  <div class="card">
-    <div class="card-title">クイック記録</div>
-    <div class="form-row">
-      <div><label>日付</label><input type="date" id="q-date"></div>
-      <div><label>距離 (km)</label><input type="number" id="q-dist" placeholder="6.5" step="0.1" min="0"></div>
+
+    <!-- MENU -->
+    <div class="page" id="page-menu">
+      <div class="sec-title">今週のメニュー</div>
+      <div id="menu-phase-banner" style="margin-bottom:12px;"></div>
+      <div class="card" id="menu-week-table"></div>
+      <div class="sec-title" style="margin-top:28px;">フェーズ別メニュー</div>
+
+      <div class="phase-header" style="color:var(--p1)">Phase 1｜5〜6月「基礎期」</div>
+      <div class="card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>曜日</th>
+              <th>メニュー</th>
+              <th>距離</th>
+              <th>時間</th>
+              <th>ペース</th>
+              <th>ポイント</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>火</td>
+              <td><span class="mtag mtag-easy">EASY</span> イージーラン</td>
+              <td>5km</td>
+              <td>約38分</td>
+              <td>7'30"〜8'00"</td>
+              <td>鼻呼吸できる強度</td>
+            </tr>
+            <tr>
+              <td>木</td>
+              <td><span class="mtag mtag-tempo">TEMPO</span> テンポ走</td>
+              <td>3〜4km</td>
+              <td>約25分</td>
+              <td>7'00"前後</td>
+              <td>ややきつい手前で止める</td>
+            </tr>
+            <tr>
+              <td>土</td>
+              <td><span class="mtag mtag-long">LONG</span> ロング走</td>
+              <td>8〜10km</td>
+              <td>60〜75分</td>
+              <td>7'30"〜8'00"</td>
+              <td>止まらず動き続ける</td>
+            </tr>
+            <tr>
+              <td>他</td>
+              <td><span class="mtag mtag-rest">REST</span> 完全休養</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>すね・膝の回復優先</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note">週3継続が最優先。距離より「習慣化」を優先する。</div>
+      </div>
+
+      <div class="phase-header" style="color:var(--p2)">Phase 2｜7〜8月「夏維持期」</div>
+      <div class="card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>曜日</th>
+              <th>メニュー</th>
+              <th>時間</th>
+              <th>ペース</th>
+              <th>ポイント</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>火</td>
+              <td><span class="mtag mtag-easy">EASY</span> 短めイージー</td>
+              <td>30分</td>
+              <td>体感優先</td>
+              <td>早朝 or 夜20時以降</td>
+            </tr>
+            <tr>
+              <td>木</td>
+              <td><span class="mtag mtag-easy">EASY</span> イージーラン</td>
+              <td>30〜40分</td>
+              <td>体感優先</td>
+              <td>無理しない・タイム不問</td>
+            </tr>
+            <tr>
+              <td>土</td>
+              <td><span class="mtag mtag-long">LONG</span> ロング走</td>
+              <td>60〜80分</td>
+              <td>体感優先</td>
+              <td>早朝限定・給水必須</td>
+            </tr>
+            <tr>
+              <td>他</td>
+              <td><span class="mtag mtag-rest">REST</span> 休養</td>
+              <td>—</td>
+              <td>—</td>
+              <td>暑熱回復を優先</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note">夏は「今日も動いた」それだけでOK。タイムが落ちるのは正常。時間で管理する。</div>
+      </div>
+
+      <div class="phase-header" style="color:var(--p3)">Phase 3｜9月〜10/25「10km仕上げ期」</div>
+      <div class="card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>曜日</th>
+              <th>メニュー</th>
+              <th>距離</th>
+              <th>時間</th>
+              <th>ペース</th>
+              <th>ポイント</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>火</td>
+              <td><span class="mtag mtag-easy">EASY</span> イージーラン</td>
+              <td>6km</td>
+              <td>約45分</td>
+              <td>7'30"</td>
+              <td>リカバリー</td>
+            </tr>
+            <tr>
+              <td>木</td>
+              <td><span class="mtag mtag-tempo">TEMPO</span> テンポ走</td>
+              <td>4〜5km</td>
+              <td>約30分</td>
+              <td>6'30"〜6'40"</td>
+              <td>LT改善が目的</td>
+            </tr>
+            <tr>
+              <td>土(9月〜10/10)</td>
+              <td><span class="mtag mtag-long">LONG</span> ロング走</td>
+              <td>10〜13km</td>
+              <td>75〜100分</td>
+              <td>7'30"〜8'00"</td>
+              <td>スタミナ底上げ</td>
+            </tr>
+            <tr>
+              <td>土(10/13〜25)</td>
+              <td><span class="mtag mtag-race">RACE</span> レースペース走</td>
+              <td>5〜7km</td>
+              <td>35〜50分</td>
+              <td>6'30"〜7'00"</td>
+              <td>本番感覚を体に染み込ませる</td>
+            </tr>
+            <tr>
+              <td>他</td>
+              <td><span class="mtag mtag-rest">REST</span> 休養</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note">10/25 にしのみや武庫川マラソン10km　本命7'00"／好調6'30"／超好調6'00"</div>
+      </div>
+
+      <div class="phase-header" style="color:var(--p4)">Phase 4｜10/26〜1/12「ハーフ準備期」</div>
+      <div class="card">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>曜日</th>
+              <th>メニュー</th>
+              <th>距離</th>
+              <th>時間</th>
+              <th>ペース</th>
+              <th>ポイント</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>火</td>
+              <td><span class="mtag mtag-easy">EASY</span> イージーラン</td>
+              <td>6km</td>
+              <td>約45分</td>
+              <td>7'30"</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>木</td>
+              <td><span class="mtag mtag-tempo">TEMPO</span> テンポ走</td>
+              <td>5km</td>
+              <td>約35分</td>
+              <td>6'50"〜7'00"</td>
+              <td>スピード維持</td>
+            </tr>
+            <tr>
+              <td>土</td>
+              <td><span class="mtag mtag-long">LONG</span> ロング走</td>
+              <td>12〜18km</td>
+              <td>90〜140分</td>
+              <td>7'30"〜8'00"</td>
+              <td>4週サイクルで波を作る</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="note">ロング走サイクル例：12km → 15km → 18km → 10km(回復) → 繰り返し。20kmは不要。</div>
+        <div class="note" style="margin-top:6px;">1/12 高槻シティハーフ　目標2:30:00（7'05"/km） / 制限2:50:00。完走ファースト。</div>
+      </div>
+
+      <div class="sec-title">補強運動（週2回・5分）</div>
+      <div class="grid4">
+        <div class="stat">
+          <div class="stat-label">カーフレイズ</div>
+          <div class="stat-val" style="color:var(--accent)">20</div>
+          <div class="stat-sub">回 / すね保護</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">スクワット</div>
+          <div class="stat-val" style="color:var(--accent)">15</div>
+          <div class="stat-sub">回 / 膝・臀部</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">ヒップリフト</div>
+          <div class="stat-val" style="color:var(--accent)">15</div>
+          <div class="stat-sub">回 / 腰保護</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">プランク</div>
+          <div class="stat-val" style="color:var(--accent)">30</div>
+          <div class="stat-sub">秒 / 体幹</div>
+        </div>
+      </div>
     </div>
-    <div class="form-row">
-      <div><label>ペース (例: 7'30")</label><input type="text" id="q-pace" placeholder="7'30&quot;"></div>
-      <div><label>メニュータイプ</label>
-        <select id="q-type">
-          <option value="easy">イージーラン</option>
-          <option value="tempo">テンポ走</option>
-          <option value="long">ロング走</option>
-          <option value="race">レースペース走</option>
+
+    <!-- LOG -->
+    <div class="page" id="page-log">
+      <div class="sec-title">ラン記録</div>
+      <div class="card">
+        <div class="card-title">新規記録</div>
+        <div class="form-row">
+          <div><label>日付</label><input type="date" id="l-date"></div>
+          <div><label>距離 (km)</label><input type="number" id="l-dist" placeholder="8.0" step="0.1" min="0"></div>
+        </div>
+        <div class="form-row">
+          <div><label>ペース (例: 7'03")</label><input type="text" id="l-pace" placeholder="7'03&quot;"></div>
+          <div><label>メニュータイプ</label>
+            <select id="l-type">
+              <option value="easy">イージーラン</option>
+              <option value="tempo">テンポ走</option>
+              <option value="long">ロング走</option>
+              <option value="race">レースペース走</option>
+              <option value="interval">インターバル</option>
+              <option value="race_event">大会</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row single">
+          <div><label>メモ</label><textarea id="l-memo" placeholder="体調・気温・コースなど"></textarea></div>
+        </div>
+        <button class="btn btn-primary" onclick="addLog()">記録を追加</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
+        <select id="log-f-month" onchange="await renderLogTable()"
+          style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;"></select>
+        <select id="log-f-type" onchange="await renderLogTable()"
+          style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;">
+          <option value="">全タイプ</option>
+          <option value="easy">イージー</option>
+          <option value="tempo">テンポ</option>
+          <option value="long">ロング</option>
+          <option value="race">レースペース</option>
           <option value="interval">インターバル</option>
           <option value="race_event">大会</option>
         </select>
       </div>
-    </div>
-    <div class="form-row single"><div><label>メモ</label><input type="text" id="q-memo" placeholder="体調、気温など"></div></div>
-    <button class="btn btn-primary" onclick="quickLog()">記録する</button>
-  </div>
-  <div class="card">
-    <div class="card-title">直近のラン</div>
-    <div id="d-recent"></div>
-  </div>
-</div>
-
-<!-- MENU -->
-<div class="page" id="page-menu">
-  <div class="sec-title">今週のメニュー</div>
-  <div id="menu-phase-banner" style="margin-bottom:12px;"></div>
-  <div class="card" id="menu-week-table"></div>
-  <div class="sec-title" style="margin-top:28px;">フェーズ別メニュー</div>
-
-  <div class="phase-header" style="color:var(--p1)">Phase 1｜5〜6月「基礎期」</div>
-  <div class="card">
-    <table class="tbl"><thead><tr><th>曜日</th><th>メニュー</th><th>距離</th><th>時間</th><th>ペース</th><th>ポイント</th></tr></thead>
-    <tbody>
-      <tr><td>火</td><td><span class="mtag mtag-easy">EASY</span> イージーラン</td><td>5km</td><td>約38分</td><td>7'30"〜8'00"</td><td>鼻呼吸できる強度</td></tr>
-      <tr><td>木</td><td><span class="mtag mtag-tempo">TEMPO</span> テンポ走</td><td>3〜4km</td><td>約25分</td><td>7'00"前後</td><td>ややきつい手前で止める</td></tr>
-      <tr><td>土</td><td><span class="mtag mtag-long">LONG</span> ロング走</td><td>8〜10km</td><td>60〜75分</td><td>7'30"〜8'00"</td><td>止まらず動き続ける</td></tr>
-      <tr><td>他</td><td><span class="mtag mtag-rest">REST</span> 完全休養</td><td>—</td><td>—</td><td>—</td><td>すね・膝の回復優先</td></tr>
-    </tbody></table>
-    <div class="note">週3継続が最優先。距離より「習慣化」を優先する。</div>
-  </div>
-
-  <div class="phase-header" style="color:var(--p2)">Phase 2｜7〜8月「夏維持期」</div>
-  <div class="card">
-    <table class="tbl"><thead><tr><th>曜日</th><th>メニュー</th><th>時間</th><th>ペース</th><th>ポイント</th></tr></thead>
-    <tbody>
-      <tr><td>火</td><td><span class="mtag mtag-easy">EASY</span> 短めイージー</td><td>30分</td><td>体感優先</td><td>早朝 or 夜20時以降</td></tr>
-      <tr><td>木</td><td><span class="mtag mtag-easy">EASY</span> イージーラン</td><td>30〜40分</td><td>体感優先</td><td>無理しない・タイム不問</td></tr>
-      <tr><td>土</td><td><span class="mtag mtag-long">LONG</span> ロング走</td><td>60〜80分</td><td>体感優先</td><td>早朝限定・給水必須</td></tr>
-      <tr><td>他</td><td><span class="mtag mtag-rest">REST</span> 休養</td><td>—</td><td>—</td><td>暑熱回復を優先</td></tr>
-    </tbody></table>
-    <div class="note">夏は「今日も動いた」それだけでOK。タイムが落ちるのは正常。時間で管理する。</div>
-  </div>
-
-  <div class="phase-header" style="color:var(--p3)">Phase 3｜9月〜10/25「10km仕上げ期」</div>
-  <div class="card">
-    <table class="tbl"><thead><tr><th>曜日</th><th>メニュー</th><th>距離</th><th>時間</th><th>ペース</th><th>ポイント</th></tr></thead>
-    <tbody>
-      <tr><td>火</td><td><span class="mtag mtag-easy">EASY</span> イージーラン</td><td>6km</td><td>約45分</td><td>7'30"</td><td>リカバリー</td></tr>
-      <tr><td>木</td><td><span class="mtag mtag-tempo">TEMPO</span> テンポ走</td><td>4〜5km</td><td>約30分</td><td>6'30"〜6'40"</td><td>LT改善が目的</td></tr>
-      <tr><td>土(9月〜10/10)</td><td><span class="mtag mtag-long">LONG</span> ロング走</td><td>10〜13km</td><td>75〜100分</td><td>7'30"〜8'00"</td><td>スタミナ底上げ</td></tr>
-      <tr><td>土(10/13〜25)</td><td><span class="mtag mtag-race">RACE</span> レースペース走</td><td>5〜7km</td><td>35〜50分</td><td>6'30"〜7'00"</td><td>本番感覚を体に染み込ませる</td></tr>
-      <tr><td>他</td><td><span class="mtag mtag-rest">REST</span> 休養</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-    </tbody></table>
-    <div class="note">10/25 にしのみや武庫川マラソン10km　本命7'00"／好調6'30"／超好調6'00"</div>
-  </div>
-
-  <div class="phase-header" style="color:var(--p4)">Phase 4｜10/26〜1/12「ハーフ準備期」</div>
-  <div class="card">
-    <table class="tbl"><thead><tr><th>曜日</th><th>メニュー</th><th>距離</th><th>時間</th><th>ペース</th><th>ポイント</th></tr></thead>
-    <tbody>
-      <tr><td>火</td><td><span class="mtag mtag-easy">EASY</span> イージーラン</td><td>6km</td><td>約45分</td><td>7'30"</td><td>—</td></tr>
-      <tr><td>木</td><td><span class="mtag mtag-tempo">TEMPO</span> テンポ走</td><td>5km</td><td>約35分</td><td>6'50"〜7'00"</td><td>スピード維持</td></tr>
-      <tr><td>土</td><td><span class="mtag mtag-long">LONG</span> ロング走</td><td>12〜18km</td><td>90〜140分</td><td>7'30"〜8'00"</td><td>4週サイクルで波を作る</td></tr>
-    </tbody></table>
-    <div class="note">ロング走サイクル例：12km → 15km → 18km → 10km(回復) → 繰り返し。20kmは不要。</div>
-    <div class="note" style="margin-top:6px;">1/12 高槻シティハーフ　目標2:30:00（7'05"/km） / 制限2:50:00。完走ファースト。</div>
-  </div>
-
-  <div class="sec-title">補強運動（週2回・5分）</div>
-  <div class="grid4">
-    <div class="stat"><div class="stat-label">カーフレイズ</div><div class="stat-val" style="color:var(--accent)">20</div><div class="stat-sub">回 / すね保護</div></div>
-    <div class="stat"><div class="stat-label">スクワット</div><div class="stat-val" style="color:var(--accent)">15</div><div class="stat-sub">回 / 膝・臀部</div></div>
-    <div class="stat"><div class="stat-label">ヒップリフト</div><div class="stat-val" style="color:var(--accent)">15</div><div class="stat-sub">回 / 腰保護</div></div>
-    <div class="stat"><div class="stat-label">プランク</div><div class="stat-val" style="color:var(--accent)">30</div><div class="stat-sub">秒 / 体幹</div></div>
-  </div>
-</div>
-
-<!-- LOG -->
-<div class="page" id="page-log">
-  <div class="sec-title">ラン記録</div>
-  <div class="card">
-    <div class="card-title">新規記録</div>
-    <div class="form-row">
-      <div><label>日付</label><input type="date" id="l-date"></div>
-      <div><label>距離 (km)</label><input type="number" id="l-dist" placeholder="8.0" step="0.1" min="0"></div>
-    </div>
-    <div class="form-row">
-      <div><label>ペース (例: 7'03")</label><input type="text" id="l-pace" placeholder="7'03&quot;"></div>
-      <div><label>メニュータイプ</label>
-        <select id="l-type">
-          <option value="easy">イージーラン</option>
-          <option value="tempo">テンポ走</option>
-          <option value="long">ロング走</option>
-          <option value="race">レースペース走</option>
-          <option value="interval">インターバル</option>
-          <option value="race_event">大会</option>
-        </select>
+      <div class="card" style="padding:0;overflow-x:auto;">
+        <div id="log-table-wrap"></div>
       </div>
     </div>
-    <div class="form-row single"><div><label>メモ</label><textarea id="l-memo" placeholder="体調・気温・コースなど"></textarea></div></div>
-    <button class="btn btn-primary" onclick="addLog()">記録を追加</button>
-  </div>
-  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-    <select id="log-f-month" onchange="await renderLogTable()" style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;"></select>
-    <select id="log-f-type" onchange="await renderLogTable()" style="background:var(--s1);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-size:12px;font-family:'JetBrains Mono',monospace;">
-      <option value="">全タイプ</option>
-      <option value="easy">イージー</option>
-      <option value="tempo">テンポ</option>
-      <option value="long">ロング</option>
-      <option value="race">レースペース</option>
-      <option value="interval">インターバル</option>
-      <option value="race_event">大会</option>
-    </select>
-  </div>
-  <div class="card" style="padding:0;overflow-x:auto;">
-    <div id="log-table-wrap"></div>
-  </div>
-</div>
 
-<!-- MONTHLY -->
-<div class="page" id="page-monthly">
-  <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
-    <button class="btn btn-ghost" onclick="changeMonth(-1)">◀</button>
-    <div id="m-title" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;flex:1;text-align:center;"></div>
-    <button class="btn btn-ghost" onclick="changeMonth(1)">▶</button>
-  </div>
-  <div class="grid3" style="margin-bottom:12px;">
-    <div class="stat"><div class="stat-label">合計距離</div><div class="stat-val" id="m-total-km" style="color:var(--accent)">0.0</div><div class="stat-sub">km</div></div>
-    <div class="stat"><div class="stat-label">ラン回数</div><div class="stat-val" id="m-count" style="color:var(--a3)">0</div><div class="stat-sub">回</div></div>
-    <div class="stat"><div class="stat-label">平均ペース</div><div class="stat-val" id="m-avg-pace" style="color:var(--p3);font-size:20px;padding-top:6px;">—</div><div class="stat-sub">/km</div></div>
-  </div>
-  <div class="card" id="m-prog-card"></div>
-  <div class="card">
-    <div class="card-title">月末チェックリスト</div>
-    <div id="m-checklist"></div>
-    <div style="margin-top:12px;">
-      <label>フリーメモ（振り返り・気づき・来月への改善点）</label>
-      <textarea id="m-memo" placeholder="今月の振り返りを記録..."></textarea>
+    <!-- MONTHLY -->
+    <div class="page" id="page-monthly">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;">
+        <button class="btn btn-ghost" onclick="changeMonth(-1)">◀</button>
+        <div id="m-title"
+          style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;flex:1;text-align:center;"></div>
+        <button class="btn btn-ghost" onclick="changeMonth(1)">▶</button>
+      </div>
+      <div class="grid3" style="margin-bottom:12px;">
+        <div class="stat">
+          <div class="stat-label">合計距離</div>
+          <div class="stat-val" id="m-total-km" style="color:var(--accent)">0.0</div>
+          <div class="stat-sub">km</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">ラン回数</div>
+          <div class="stat-val" id="m-count" style="color:var(--a3)">0</div>
+          <div class="stat-sub">回</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">平均ペース</div>
+          <div class="stat-val" id="m-avg-pace" style="color:var(--p3);font-size:20px;padding-top:6px;">—</div>
+          <div class="stat-sub">/km</div>
+        </div>
+      </div>
+      <div class="card" id="m-prog-card"></div>
+      <div class="card">
+        <div class="card-title">月末チェックリスト</div>
+        <div id="m-checklist"></div>
+        <div style="margin-top:12px;">
+          <label>フリーメモ（振り返り・気づき・来月への改善点）</label>
+          <textarea id="m-memo" placeholder="今月の振り返りを記録..."></textarea>
+        </div>
+        <button class="btn btn-primary" style="margin-top:8px;font-size:10px;padding:8px 16px;"
+          onclick="saveMonthlyCheck()">保存</button>
+      </div>
+      <div class="card" style="padding:0;overflow-x:auto;">
+        <div
+          style="padding:14px 16px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);">
+          THIS MONTH'S RUNS</div>
+        <div id="m-runs"></div>
+      </div>
     </div>
-    <button class="btn btn-primary" style="margin-top:8px;font-size:10px;padding:8px 16px;" onclick="saveMonthlyCheck()">保存</button>
-  </div>
-  <div class="card" style="padding:0;overflow-x:auto;">
-    <div style="padding:14px 16px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--accent);">THIS MONTH'S RUNS</div>
-    <div id="m-runs"></div>
-  </div>
-</div>
 
-<!-- PHASE -->
-<div class="page" id="page-phase">
-  <div class="sec-title">フェーズ進捗</div>
-  <div class="card">
-    <div class="card-title">全体タイムライン</div>
-    <div id="ph-timeline"></div>
-  </div>
-  <div class="sec-title">月別マイルストーン</div>
-  <div class="card" style="padding:0;overflow-x:auto;">
-    <table class="tbl">
-      <thead><tr><th>月</th><th>月間距離目標</th><th>10kmペース目標</th><th>実績距離</th><th>達成</th></tr></thead>
-      <tbody id="ph-milestone"></tbody>
-    </table>
-  </div>
-  <div class="sec-title">🏁 レース情報</div>
-  <div class="grid2">
-    <div class="card" style="border-left:3px solid var(--p3);">
-      <div class="card-title" style="color:var(--p3)">🥇 にしのみや武庫川マラソン 10km</div>
-      <div style="font-size:14px;margin-bottom:8px;"><strong>2026年10月25日</strong></div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">第一目標</div>
-      <table class="tbl" style="margin-top:6px;">
-        <tbody>
-          <tr><td style="font-size:11px;color:var(--accent);"><strong>本命</strong></td><td><strong>70分</strong></td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">7'00"/km</td></tr>
-          <tr><td style="font-size:11px;color:var(--a3);"><strong>好調</strong></td><td><strong>65分</strong></td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">6'30"/km</td></tr>
-          <tr><td style="font-size:11px;color:var(--a2);"><strong>超好調</strong></td><td><strong>60分</strong></td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">6'00"/km</td></tr>
-        </tbody>
-      </table>
+    <!-- PHASE -->
+    <div class="page" id="page-phase">
+      <div class="sec-title">フェーズ進捗</div>
+      <div class="card">
+        <div class="card-title">全体タイムライン</div>
+        <div id="ph-timeline"></div>
+      </div>
+      <div class="sec-title">月別マイルストーン</div>
+      <div class="card" style="padding:0;overflow-x:auto;">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>月</th>
+              <th>月間距離目標</th>
+              <th>10kmペース目標</th>
+              <th>実績距離</th>
+              <th>達成</th>
+            </tr>
+          </thead>
+          <tbody id="ph-milestone"></tbody>
+        </table>
+      </div>
+      <div class="sec-title">🏁 レース情報</div>
+      <div class="grid2">
+        <div class="card" style="border-left:3px solid var(--p3);">
+          <div class="card-title" style="color:var(--p3)">🥇 にしのみや武庫川マラソン 10km</div>
+          <div style="font-size:14px;margin-bottom:8px;"><strong>2026年10月25日</strong></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">第一目標</div>
+          <table class="tbl" style="margin-top:6px;">
+            <tbody>
+              <tr>
+                <td style="font-size:11px;color:var(--accent);"><strong>本命</strong></td>
+                <td><strong>70分</strong></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">7'00"/km</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--a3);"><strong>好調</strong></td>
+                <td><strong>65分</strong></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">6'30"/km</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--a2);"><strong>超好調</strong></td>
+                <td><strong>60分</strong></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">6'00"/km</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="border-left:3px solid var(--p4);">
+          <div class="card-title" style="color:var(--p4)">🥈 高槻シティハーフマラソン</div>
+          <div style="font-size:14px;margin-bottom:8px;"><strong>2027年1月12日頃</strong></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">第二目標 / 制限時間 2:50:00</div>
+          <table class="tbl" style="margin-top:6px;">
+            <tbody>
+              <tr>
+                <td style="font-size:11px;color:var(--accent);"><strong>目標</strong></td>
+                <td><strong>2:30:00</strong></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">7'05"/km</td>
+              </tr>
+              <tr>
+                <td style="font-size:11px;color:var(--green);"><strong>最低</strong></td>
+                <td><strong>完走</strong></td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">8'00"/km</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
-    <div class="card" style="border-left:3px solid var(--p4);">
-      <div class="card-title" style="color:var(--p4)">🥈 高槻シティハーフマラソン</div>
-      <div style="font-size:14px;margin-bottom:8px;"><strong>2027年1月12日頃</strong></div>
-      <div style="font-size:12px;color:var(--muted);margin-bottom:10px;">第二目標 / 制限時間 2:50:00</div>
-      <table class="tbl" style="margin-top:6px;">
-        <tbody>
-          <tr><td style="font-size:11px;color:var(--accent);"><strong>目標</strong></td><td><strong>2:30:00</strong></td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">7'05"/km</td></tr>
-          <tr><td style="font-size:11px;color:var(--green);"><strong>最低</strong></td><td><strong>完走</strong></td><td style="font-family:'JetBrains Mono',monospace;font-size:11px;">8'00"/km</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
 
-<script type="module">
-// ═══ FIREBASE SETUP ═══════════════════════════════
-import { initializeApp }                        from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
-                                                from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, writeBatch }
-                                                from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+    <script type="module">
+      // ═══ FIREBASE SETUP ═══════════════════════════════
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+      import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+        from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+      import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, writeBatch }
+        from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey:            "AIzaSyAJMhukWyIQ28oeS6vW502s0Rn_FkMVqzc",
-  authDomain:        "running-tracker-db-2e192.firebaseapp.com",
-  projectId:         "running-tracker-db-2e192",
-  storageBucket:     "running-tracker-db-2e192.firebasestorage.app",
-  messagingSenderId: "707248926161",
-  appId:             "1:707248926161:web:8252a41ce9199dc84d84f0",
-};
+      const firebaseConfig = {
+        apiKey: "AIzaSyAJMhukWyIQ28oeS6vW502s0Rn_FkMVqzc",
+        authDomain: "running-tracker-db-2e192.firebaseapp.com",
+        projectId: "running-tracker-db-2e192",
+        storageBucket: "running-tracker-db-2e192.firebasestorage.app",
+        messagingSenderId: "707248926161",
+        appId: "1:707248926161:web:8252a41ce9199dc84d84f0",
+      };
 
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-let currentUser = null;
+      let currentUser = null;
 
-// ── AUTH STATE ──
-onAuthStateChanged(auth, async (user) => {
-  currentUser = user;
-  if (user) {
-    document.getElementById('auth-screen').style.display = 'none';
-    document.getElementById('app-screen').style.display  = 'block';
-    document.getElementById('user-name').textContent = user.displayName || user.email;
-    await migrateLocalStorageToFirestore(); // 既存のローカルデータがあれば移行
-    window.__appInit();                     // メインアプリ初期化
-  } else {
-    document.getElementById('auth-screen').style.display = 'flex';
-    document.getElementById('app-screen').style.display  = 'none';
-  }
-});
+      // ── AUTH STATE ──
+      onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+        if (user) {
+          document.getElementById('auth-screen').style.display = 'none';
+          document.getElementById('app-screen').style.display = 'block';
+          document.getElementById('user-name').textContent = user.displayName || user.email;
+          await migrateLocalStorageToFirestore(); // 既存のローカルデータがあれば移行
+          window.__appInit();                     // メインアプリ初期化
+        } else {
+          document.getElementById('auth-screen').style.display = 'flex';
+          document.getElementById('app-screen').style.display = 'none';
+        }
+      });
 
-// ── GOOGLE LOGIN ──
-window.loginWithGoogle = async () => {
-  try {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
-  } catch(e) {
-    console.error(e);
-    alert('ログインに失敗しました: ' + e.message);
-  }
-};
+      // ── GOOGLE LOGIN ──
+      window.loginWithGoogle = async () => {
+        try {
+          const provider = new GoogleAuthProvider();
+          await signInWithPopup(auth, provider);
+        } catch (e) {
+          console.error(e);
+          alert('ログインに失敗しました: ' + e.message);
+        }
+      };
 
-window.logout = async () => {
-  await signOut(auth);
-};
+      window.logout = async () => {
+        await signOut(auth);
+      };
 
-// ── FIRESTORE STORAGE（localStorage の代替）──
-window.fsGetLogs = async () => {
-  if (!currentUser) return [];
-  try {
-    const col  = collection(db, 'users', currentUser.uid, 'logs');
-    const snap = await getDocs(col);
-    return snap.docs.map(d => d.data());
-  } catch(e) { console.error(e); return []; }
-};
+      // ── FIRESTORE STORAGE（localStorage の代替）──
+      window.fsGetLogs = async () => {
+        if (!currentUser) return [];
+        try {
+          const col = collection(db, 'users', currentUser.uid, 'logs');
+          const snap = await getDocs(col);
+          return snap.docs.map(d => d.data());
+        } catch (e) { console.error(e); return []; }
+      };
 
-window.fsSaveLogs = async (logs) => {
-  if (!currentUser) return;
-  try {
-    const batch = writeBatch(db);
-    // 既存を全削除してから書き直す
-    const col  = collection(db, 'users', currentUser.uid, 'logs');
-    const snap = await getDocs(col);
-    snap.docs.forEach(d => batch.delete(d.ref));
-    logs.forEach(l => {
-      const ref = doc(col, String(l.id));
-      batch.set(ref, l);
-    });
-    await batch.commit();
-  } catch(e) { console.error(e); }
-};
+      window.fsSaveLogs = async (logs) => {
+        if (!currentUser) return;
+        try {
+          const batch = writeBatch(db);
+          // 既存を全削除してから書き直す
+          const col = collection(db, 'users', currentUser.uid, 'logs');
+          const snap = await getDocs(col);
+          snap.docs.forEach(d => batch.delete(d.ref));
+          logs.forEach(l => {
+            const ref = doc(col, String(l.id));
+            batch.set(ref, l);
+          });
+          await batch.commit();
+        } catch (e) { console.error(e); }
+      };
 
-window.fsGetMonthlyData = async () => {
-  if (!currentUser) return {};
-  try {
-    const ref  = doc(db, 'users', currentUser.uid, 'meta', 'monthly');
-    const snap = await getDoc(ref);
-    return snap.exists() ? snap.data() : {};
-  } catch(e) { console.error(e); return {}; }
-};
+      window.fsGetMonthlyData = async () => {
+        if (!currentUser) return {};
+        try {
+          const ref = doc(db, 'users', currentUser.uid, 'meta', 'monthly');
+          const snap = await getDoc(ref);
+          return snap.exists() ? snap.data() : {};
+        } catch (e) { console.error(e); return {}; }
+      };
 
-window.fsSaveMonthlyData = async (data) => {
-  if (!currentUser) return;
-  try {
-    const ref = doc(db, 'users', currentUser.uid, 'meta', 'monthly');
-    await setDoc(ref, data);
-  } catch(e) { console.error(e); }
-};
+      window.fsSaveMonthlyData = async (data) => {
+        if (!currentUser) return;
+        try {
+          const ref = doc(db, 'users', currentUser.uid, 'meta', 'monthly');
+          await setDoc(ref, data);
+        } catch (e) { console.error(e); }
+      };
 
-window.fsGetSeedVersion = async () => {
-  if (!currentUser) return null;
-  try {
-    const ref  = doc(db, 'users', currentUser.uid, 'meta', 'seed');
-    const snap = await getDoc(ref);
-    return snap.exists() ? snap.data().version : null;
-  } catch(e) { return null; }
-};
+      window.fsGetSeedVersion = async () => {
+        if (!currentUser) return null;
+        try {
+          const ref = doc(db, 'users', currentUser.uid, 'meta', 'seed');
+          const snap = await getDoc(ref);
+          return snap.exists() ? snap.data().version : null;
+        } catch (e) { return null; }
+      };
 
-window.fsSetSeedVersion = async (v) => {
-  if (!currentUser) return;
-  try {
-    const ref = doc(db, 'users', currentUser.uid, 'meta', 'seed');
-    await setDoc(ref, { version: v });
-  } catch(e) { console.error(e); }
-};
+      window.fsSetSeedVersion = async (v) => {
+        if (!currentUser) return;
+        try {
+          const ref = doc(db, 'users', currentUser.uid, 'meta', 'seed');
+          await setDoc(ref, { version: v });
+        } catch (e) { console.error(e); }
+      };
 
-// ── localStorage → Firestore 移行（初回のみ）──
-async function migrateLocalStorageToFirestore() {
-  const localLogs = localStorage.getItem('sr_logs');
-  if (!localLogs) return;
-  const seedVer = await window.fsGetSeedVersion();
-  if (seedVer) return; // すでに移行済み
-  const logs = JSON.parse(localLogs);
-  if (logs.length > 0) {
-    await window.fsSaveLogs(logs);
-    console.log('localStorage → Firestore 移行完了');
-  }
-  localStorage.removeItem('sr_logs');
-  localStorage.removeItem('sr_monthly');
-  localStorage.removeItem('sr_seed_version');
-}
-</script>
-
-<script type="module">
-// ═══ DATA ═══════════════════════════════════════════
-
-const PHASES = [
-  {id:1, name:'基礎期',       period:'5〜6月',       color:'var(--p1)', startYM:'2026-05', endYM:'2026-06', distMin:50, distMax:70,  theme:'怪我せず週3習慣化'},
-  {id:2, name:'夏維持期',     period:'7〜8月',       color:'var(--p2)', startYM:'2026-07', endYM:'2026-08', distMin:50, distMax:65,  theme:'止まらず生き残る'},
-  {id:3, name:'10km仕上げ期', period:'9月〜10/25',   color:'var(--p3)', startYM:'2026-09', endYM:'2026-10', distMin:80, distMax:95,  theme:'LT改善・レースペース体得'},
-  {id:4, name:'ハーフ準備期', period:'10/26〜1/12',  color:'var(--p4)', startYM:'2026-11', endYM:'2027-01', distMin:90, distMax:120, theme:'距離耐性・完走仕上げ'},
-];
-
-const MONTHLY = [
-  {m:'2026-05', label:'5月',  distMin:50,  distMax:60,  pace:"7'10\"",          note:'基礎期'},
-  {m:'2026-06', label:'6月',  distMin:60,  distMax:70,  pace:"7'00\"",          note:'基礎期'},
-  {m:'2026-07', label:'7月',  distMin:50,  distMax:60,  pace:'時間・継続で管理',  note:'夏は時間管理'},
-  {m:'2026-08', label:'8月',  distMin:50,  distMax:65,  pace:'時間・継続で管理',  note:'夏は時間管理'},
-  {m:'2026-09', label:'9月',  distMin:80,  distMax:90,  pace:"6'40\"",          note:'10km仕上げ期へ'},
-  {m:'2026-10', label:'10月', distMin:85,  distMax:95,  pace:"本命7'00\"",      note:'10/25 にしのみや武庫川10km'},
-  {m:'2026-11', label:'11月', distMin:95,  distMax:110, pace:"7'00\"〜7'30\"", note:'ハーフ準備・距離伸ばし'},
-  {m:'2026-12', label:'12月', distMin:100, distMax:120, pace:"7'00\"〜7'30\"", note:'ロング走ピーク'},
-  {m:'2027-01', label:'1月',  distMin:60,  distMax:80,  pace:"テーパー",          note:'1/12 高槻シティハーフ'},
-];
-
-const MONTH_CHECKS = {
-  '2026-05':['距離目標達成？','すね異常なし？','週3継続できた？'],
-  '2026-06':['距離目標達成？','すね異常なし？','週3継続できた？'],
-  '2026-07':['週3継続できた？','メンタル崩れてない？','猛暑でも朝夜に走れた？'],
-  '2026-08':['週3継続できた？','メンタル崩れてない？','熱中症なし？'],
-  '2026-09':['夏を越えられた？','テンポ走で6\'40\"出せた？','レースペース走こなせた？'],
-  '2026-10':['10/25 にしのみや武庫川 結果記録した？','目標タイム達成？','次のハーフへの切り替えOK？'],
-  '2026-11':['ロング走15kmまで伸ばせた？','すね・膝に違和感ない？','10km走後の回復進んでる？'],
-  '2026-12':['ロング走18kmまで到達？','疲労蓄積してない？','ハーフ完走イメージ持てる？'],
-  '2027-01':['1/12 高槻シティハーフ 完走？','目標タイム達成？','次シーズンの計画ある？'],
-};
-
-const TYPE_LABELS = {
-  easy:'イージーラン', tempo:'テンポ走', fartlek:'ファルトレク',
-  long:'ロング走', race:'レースペース走', interval:'インターバル', race_event:'大会'
-};
-
-// ═══ DATE UTILS（ローカルタイム基準・UTC問題を完全回避）═══
-
-// 今日の "YYYY-MM-DD" をローカルタイムで返す
-function todayStr() {
-  return localDateStr(new Date());
-}
-
-// Date → "YYYY-MM-DD"（ローカルタイム）
-function localDateStr(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-// "YYYY-MM-DD" → Date（ローカルタイムで解釈。new Date("YYYY-MM-DD") はUTCになるので使わない）
-function parseLocalDate(s) {
-  const [y, m, d] = s.split('-').map(Number);
-  return new Date(y, m - 1, d);
-}
-
-// "YYYY-MM-DD" → "YYYY/M/D(曜)"
-function fmtDate(s) {
-  const d = parseLocalDate(s);
-  const DOW = ['日','月','火','水','木','金','土'];
-  return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}(${DOW[d.getDay()]})`;
-}
-
-// "YYYY-MM-DD" → "YYYY-MM"
-function monthKey(s) { return s.slice(0, 7); }
-
-// その週の月曜日を "YYYY-MM-DD" で返す（月曜始まり）
-function weekMonday(dateStr) {
-  const d = parseLocalDate(dateStr);
-  const dow = d.getDay(); // 0=日,1=月,...,6=土
-  const diffToMon = (dow === 0) ? -6 : 1 - dow;
-  const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diffToMon);
-  return localDateStr(mon);
-}
-
-// 今月キー
-function currentMonthKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-}
-
-// ═══ PACE UTILS ═══
-
-function paceToSec(p) {
-  if (!p) return null;
-  // '7\'30"' や "7'30\"" など各種シングル/ダブルクォート対応
-  const match = p.match(/(\d+)[^\d](\d+)/);
-  if (!match) return null;
-  return parseInt(match[1]) * 60 + parseInt(match[2]);
-}
-
-function secToPace(s) {
-  if (!s || isNaN(s)) return '—';
-  return `${Math.floor(s / 60)}'${String(s % 60).padStart(2, '0')}"`;
-}
-
-// ═══ PHASE DETECTION ═══
-
-function getCurrentPhase() {
-  const d   = new Date();
-  const yr  = d.getFullYear();
-  const mo  = d.getMonth() + 1; // 1-12
-  const day = d.getDate();
-
-  // PHASES = [基礎期, 夏維持期, 10km仕上げ期, ハーフ準備期]
-  // 2026年
-  if (yr === 2026) {
-    if (mo <= 6)  return PHASES[0]; // Phase1: 基礎期
-    if (mo <= 8)  return PHASES[1]; // Phase2: 夏維持期
-    if (mo === 9) return PHASES[2]; // Phase3: 10km仕上げ期
-    if (mo === 10 && day <= 25) return PHASES[2]; // 10/25 にしのみや武庫川まで
-    return PHASES[3];               // Phase4: ハーフ準備期（10/26以降）
-  }
-  // 2027年1月（1/12 高槻シティハーフまで）
-  if (yr === 2027 && mo === 1) {
-    if (day <= 12) return PHASES[3]; // ハーフ準備期
-    return PHASES[3]; // 大会後もとりあえず同フェーズ表示
-  }
-
-  // それ以外（計画外）→ 月で簡易判定
-  if (mo >= 5 && mo <= 6)  return PHASES[0];
-  if (mo >= 7 && mo <= 8)  return PHASES[1];
-  if (mo === 9 || (mo === 10 && day <= 25)) return PHASES[2];
-  return PHASES[3];
-}
-
-// ═══ DAY MENU ═══
-
-function getDayMenu(dateStr) {
-  const d = parseLocalDate(dateStr);
-  const dow = d.getDay(); // 0=日,2=火,4=木,6=土
-  const ph = getCurrentPhase();
-
-  // フェーズ別・曜日別のメニュー定義（時間目安含む）
-  // dow: 2=火, 4=木, 6=土
-  if (ph.id === 1) {
-    // Phase 1: 基礎期
-    if (dow === 2) return {tag:'easy',  label:'イージーラン',   dist:'5km',      time:'約38分',   pace:"7'30\"〜8'00\""};
-    if (dow === 4) return {tag:'tempo', label:'テンポ走',       dist:'3〜4km',   time:'約25分',   pace:"7'00\"前後"};
-    if (dow === 6) return {tag:'long',  label:'ロング走',       dist:'8〜10km',  time:'60〜75分', pace:"7'30\"〜8'00\""};
-  }
-  if (ph.id === 2) {
-    // Phase 2: 夏維持期（時間管理メイン）
-    if (dow === 2) return {tag:'easy',  label:'短めイージー',   dist:'—',        time:'30分',     pace:'体感優先'};
-    if (dow === 4) return {tag:'easy',  label:'イージーラン',   dist:'—',        time:'30〜40分', pace:'体感優先'};
-    if (dow === 6) return {tag:'long',  label:'ロング走',       dist:'—',        time:'60〜80分', pace:'体感優先・給水必須'};
-  }
-  if (ph.id === 3) {
-    // Phase 3: 10km仕上げ期（9月〜10/25）
-    if (dow === 2) return {tag:'easy',  label:'イージーラン',     dist:'6km',     time:'約45分',   pace:"7'30\""};
-    if (dow === 4) return {tag:'tempo', label:'テンポ走',         dist:'4〜5km',  time:'約30分',   pace:"6'30\"〜6'40\""};
-    if (dow === 6) {
-      // 10月後半（10/13以降）はレースペース走に切替
-      const md = parseLocalDate(dateStr);
-      if (md.getMonth() + 1 === 10 && md.getDate() >= 13) {
-        return {tag:'race', label:'レースペース走', dist:'5〜7km', time:'約35〜50分', pace:"6'30\"〜7'00\""};
+      // ── localStorage → Firestore 移行（初回のみ）──
+      async function migrateLocalStorageToFirestore() {
+        const localLogs = localStorage.getItem('sr_logs');
+        if (!localLogs) return;
+        const seedVer = await window.fsGetSeedVersion();
+        if (seedVer) return; // すでに移行済み
+        const logs = JSON.parse(localLogs);
+        if (logs.length > 0) {
+          await window.fsSaveLogs(logs);
+          console.log('localStorage → Firestore 移行完了');
+        }
+        localStorage.removeItem('sr_logs');
+        localStorage.removeItem('sr_monthly');
+        localStorage.removeItem('sr_seed_version');
       }
-      return {tag:'long', label:'ロング走', dist:'10〜13km', time:'75〜100分', pace:"7'30\"〜8'00\""};
-    }
-  }
-  if (ph.id === 4) {
-    // Phase 4: ハーフ準備期（10/26〜1/12）
-    if (dow === 2) return {tag:'easy',  label:'イージーラン',  dist:'6km',     time:'約45分',     pace:"7'30\""};
-    if (dow === 4) return {tag:'tempo', label:'テンポ走',      dist:'5km',     time:'約35分',     pace:"6'50\"〜7'00\""};
-    if (dow === 6) return {tag:'long',  label:'ロング走',      dist:'12〜18km',time:'90〜140分',  pace:"7'30\"〜8'00\""};
-  }
-  return {tag:'rest', label:'休養日', dist:'—', time:'—', pace:'—'};
-}
+    </script>
 
-// ═══ STORAGE（Firestore非同期版）═══
-// getLogs/saveLogs はすべてasync。呼び出し側もawaitで待つ
+    <script type="module">
+      // ═══ DATA ═══════════════════════════════════════════
 
-async function getLogs()          { return await window.fsGetLogs(); }
-async function saveLogs(d)        { await window.fsSaveLogs(d); }
-async function getMonthlyData()   { return await window.fsGetMonthlyData(); }
-async function saveMonthlyData(d) { await window.fsSaveMonthlyData(d); }
+      const PHASES = [
+        { id: 1, name: '基礎期', period: '5〜6月', color: 'var(--p1)', startYM: '2026-05', endYM: '2026-06', distMin: 50, distMax: 70, theme: '怪我せず週3習慣化' },
+        { id: 2, name: '夏維持期', period: '7〜8月', color: 'var(--p2)', startYM: '2026-07', endYM: '2026-08', distMin: 50, distMax: 65, theme: '止まらず生き残る' },
+        { id: 3, name: '10km仕上げ期', period: '9月〜10/25', color: 'var(--p3)', startYM: '2026-09', endYM: '2026-10', distMin: 80, distMax: 95, theme: 'LT改善・レースペース体得' },
+        { id: 4, name: 'ハーフ準備期', period: '10/26〜1/12', color: 'var(--p4)', startYM: '2026-11', endYM: '2027-01', distMin: 90, distMax: 120, theme: '距離耐性・完走仕上げ' },
+      ];
 
-// ═══ TOAST ═══
+      const MONTHLY = [
+        { m: '2026-05', label: '5月', distMin: 50, distMax: 60, pace: "7'10\"", note: '基礎期' },
+        { m: '2026-06', label: '6月', distMin: 60, distMax: 70, pace: "7'00\"", note: '基礎期' },
+        { m: '2026-07', label: '7月', distMin: 50, distMax: 60, pace: '時間・継続で管理', note: '夏は時間管理' },
+        { m: '2026-08', label: '8月', distMin: 50, distMax: 65, pace: '時間・継続で管理', note: '夏は時間管理' },
+        { m: '2026-09', label: '9月', distMin: 80, distMax: 90, pace: "6'40\"", note: '10km仕上げ期へ' },
+        { m: '2026-10', label: '10月', distMin: 85, distMax: 95, pace: "本命7'00\"", note: '10/25 にしのみや武庫川10km' },
+        { m: '2026-11', label: '11月', distMin: 95, distMax: 110, pace: "7'00\"〜7'30\"", note: 'ハーフ準備・距離伸ばし' },
+        { m: '2026-12', label: '12月', distMin: 100, distMax: 120, pace: "7'00\"〜7'30\"", note: 'ロング走ピーク' },
+        { m: '2027-01', label: '1月', distMin: 60, distMax: 80, pace: "テーパー", note: '1/12 高槻シティハーフ' },
+      ];
 
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2200);
-}
+      const MONTH_CHECKS = {
+        '2026-05': ['距離目標達成？', 'すね異常なし？', '週3継続できた？'],
+        '2026-06': ['距離目標達成？', 'すね異常なし？', '週3継続できた？'],
+        '2026-07': ['週3継続できた？', 'メンタル崩れてない？', '猛暑でも朝夜に走れた？'],
+        '2026-08': ['週3継続できた？', 'メンタル崩れてない？', '熱中症なし？'],
+        '2026-09': ['夏を越えられた？', 'テンポ走で6\'40\"出せた？', 'レースペース走こなせた？'],
+        '2026-10': ['10/25 にしのみや武庫川 結果記録した？', '目標タイム達成？', '次のハーフへの切り替えOK？'],
+        '2026-11': ['ロング走15kmまで伸ばせた？', 'すね・膝に違和感ない？', '10km走後の回復進んでる？'],
+        '2026-12': ['ロング走18kmまで到達？', '疲労蓄積してない？', 'ハーフ完走イメージ持てる？'],
+        '2027-01': ['1/12 高槻シティハーフ 完走？', '目標タイム達成？', '次シーズンの計画ある？'],
+      };
 
-// ═══ NAV ═══
+      const TYPE_LABELS = {
+        easy: 'イージーラン', tempo: 'テンポ走', fartlek: 'ファルトレク',
+        long: 'ロング走', race: 'レースペース走', interval: 'インターバル', race_event: '大会'
+      };
 
-async function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.getElementById('tab-'  + id).classList.add('active');
-  if (id === 'dashboard') await renderDashboard();
-  if (id === 'menu')      renderCurrentWeekMenu();
-  if (id === 'log')       { await populateMonthFilter(); await renderLogTable(); }
-  if (id === 'monthly')   await renderMonthly();
-  if (id === 'phase')     await renderPhase();
-}
+      // ═══ DATE UTILS（ローカルタイム基準・UTC問題を完全回避）═══
 
-// ═══ DASHBOARD ═══
+      // 今日の "YYYY-MM-DD" をローカルタイムで返す
+      function todayStr() {
+        return localDateStr(new Date());
+      }
 
-async function renderDashboard() {
-  const logs  = await getLogs();
-  const today = todayStr();
-  const mk    = monthKey(today);
-  const monStr = weekMonday(today);
+      // Date → "YYYY-MM-DD"（ローカルタイム）
+      function localDateStr(d) {
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
 
-  // Phase card
-  const ph = getCurrentPhase();
-  document.getElementById('dash-phase-card').innerHTML = `
+      // "YYYY-MM-DD" → Date（ローカルタイムで解釈。new Date("YYYY-MM-DD") はUTCになるので使わない）
+      function parseLocalDate(s) {
+        const [y, m, d] = s.split('-').map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      // "YYYY-MM-DD" → "YYYY/M/D(曜)"
+      function fmtDate(s) {
+        const d = parseLocalDate(s);
+        const DOW = ['日', '月', '火', '水', '木', '金', '土'];
+        return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}(${DOW[d.getDay()]})`;
+      }
+
+      // "YYYY-MM-DD" → "YYYY-MM"
+      function monthKey(s) { return s.slice(0, 7); }
+
+      // その週の月曜日を "YYYY-MM-DD" で返す（月曜始まり）
+      function weekMonday(dateStr) {
+        const d = parseLocalDate(dateStr);
+        const dow = d.getDay(); // 0=日,1=月,...,6=土
+        const diffToMon = (dow === 0) ? -6 : 1 - dow;
+        const mon = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diffToMon);
+        return localDateStr(mon);
+      }
+
+      // 今月キー
+      function currentMonthKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      }
+
+      // ═══ PACE UTILS ═══
+
+      function paceToSec(p) {
+        if (!p) return null;
+        // '7\'30"' や "7'30\"" など各種シングル/ダブルクォート対応
+        const match = p.match(/(\d+)[^\d](\d+)/);
+        if (!match) return null;
+        return parseInt(match[1]) * 60 + parseInt(match[2]);
+      }
+
+      function secToPace(s) {
+        if (!s || isNaN(s)) return '—';
+        return `${Math.floor(s / 60)}'${String(s % 60).padStart(2, '0')}"`;
+      }
+
+      // ═══ PHASE DETECTION ═══
+
+      function getCurrentPhase() {
+        const d = new Date();
+        const yr = d.getFullYear();
+        const mo = d.getMonth() + 1; // 1-12
+        const day = d.getDate();
+
+        // PHASES = [基礎期, 夏維持期, 10km仕上げ期, ハーフ準備期]
+        // 2026年
+        if (yr === 2026) {
+          if (mo <= 6) return PHASES[0]; // Phase1: 基礎期
+          if (mo <= 8) return PHASES[1]; // Phase2: 夏維持期
+          if (mo === 9) return PHASES[2]; // Phase3: 10km仕上げ期
+          if (mo === 10 && day <= 25) return PHASES[2]; // 10/25 にしのみや武庫川まで
+          return PHASES[3];               // Phase4: ハーフ準備期（10/26以降）
+        }
+        // 2027年1月（1/12 高槻シティハーフまで）
+        if (yr === 2027 && mo === 1) {
+          if (day <= 12) return PHASES[3]; // ハーフ準備期
+          return PHASES[3]; // 大会後もとりあえず同フェーズ表示
+        }
+
+        // それ以外（計画外）→ 月で簡易判定
+        if (mo >= 5 && mo <= 6) return PHASES[0];
+        if (mo >= 7 && mo <= 8) return PHASES[1];
+        if (mo === 9 || (mo === 10 && day <= 25)) return PHASES[2];
+        return PHASES[3];
+      }
+
+      // ═══ DAY MENU ═══
+
+      function getDayMenu(dateStr) {
+        const d = parseLocalDate(dateStr);
+        const dow = d.getDay(); // 0=日,2=火,4=木,6=土
+        const ph = getCurrentPhase();
+
+        // フェーズ別・曜日別のメニュー定義（時間目安含む）
+        // dow: 2=火, 4=木, 6=土
+        if (ph.id === 1) {
+          // Phase 1: 基礎期
+          if (dow === 2) return { tag: 'easy', label: 'イージーラン', dist: '5km', time: '約38分', pace: "7'30\"〜8'00\"" };
+          if (dow === 4) return { tag: 'tempo', label: 'テンポ走', dist: '3〜4km', time: '約25分', pace: "7'00\"前後" };
+          if (dow === 6) return { tag: 'long', label: 'ロング走', dist: '8〜10km', time: '60〜75分', pace: "7'30\"〜8'00\"" };
+        }
+        if (ph.id === 2) {
+          // Phase 2: 夏維持期（時間管理メイン）
+          if (dow === 2) return { tag: 'easy', label: '短めイージー', dist: '—', time: '30分', pace: '体感優先' };
+          if (dow === 4) return { tag: 'easy', label: 'イージーラン', dist: '—', time: '30〜40分', pace: '体感優先' };
+          if (dow === 6) return { tag: 'long', label: 'ロング走', dist: '—', time: '60〜80分', pace: '体感優先・給水必須' };
+        }
+        if (ph.id === 3) {
+          // Phase 3: 10km仕上げ期（9月〜10/25）
+          if (dow === 2) return { tag: 'easy', label: 'イージーラン', dist: '6km', time: '約45分', pace: "7'30\"" };
+          if (dow === 4) return { tag: 'tempo', label: 'テンポ走', dist: '4〜5km', time: '約30分', pace: "6'30\"〜6'40\"" };
+          if (dow === 6) {
+            // 10月後半（10/13以降）はレースペース走に切替
+            const md = parseLocalDate(dateStr);
+            if (md.getMonth() + 1 === 10 && md.getDate() >= 13) {
+              return { tag: 'race', label: 'レースペース走', dist: '5〜7km', time: '約35〜50分', pace: "6'30\"〜7'00\"" };
+            }
+            return { tag: 'long', label: 'ロング走', dist: '10〜13km', time: '75〜100分', pace: "7'30\"〜8'00\"" };
+          }
+        }
+        if (ph.id === 4) {
+          // Phase 4: ハーフ準備期（10/26〜1/12）
+          if (dow === 2) return { tag: 'easy', label: 'イージーラン', dist: '6km', time: '約45分', pace: "7'30\"" };
+          if (dow === 4) return { tag: 'tempo', label: 'テンポ走', dist: '5km', time: '約35分', pace: "6'50\"〜7'00\"" };
+          if (dow === 6) return { tag: 'long', label: 'ロング走', dist: '12〜18km', time: '90〜140分', pace: "7'30\"〜8'00\"" };
+        }
+        return { tag: 'rest', label: '休養日', dist: '—', time: '—', pace: '—' };
+      }
+
+      // ═══ STORAGE（Firestore非同期版）═══
+      // getLogs/saveLogs はすべてasync。呼び出し側もawaitで待つ
+
+      async function getLogs() { return await window.fsGetLogs(); }
+      async function saveLogs(d) { await window.fsSaveLogs(d); }
+      async function getMonthlyData() { return await window.fsGetMonthlyData(); }
+      async function saveMonthlyData(d) { await window.fsSaveMonthlyData(d); }
+
+      // ═══ TOAST ═══
+
+      function toast(msg) {
+        const el = document.getElementById('toast');
+        el.textContent = msg;
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 2200);
+      }
+
+      // ═══ NAV ═══
+
+      async function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('page-' + id).classList.add('active');
+        document.getElementById('tab-' + id).classList.add('active');
+        if (id === 'dashboard') await renderDashboard();
+        if (id === 'menu') renderCurrentWeekMenu();
+        if (id === 'log') { await populateMonthFilter(); await renderLogTable(); }
+        if (id === 'monthly') await renderMonthly();
+        if (id === 'phase') await renderPhase();
+      }
+
+      // ═══ DASHBOARD ═══
+
+      async function renderDashboard() {
+        const logs = await getLogs();
+        const today = todayStr();
+        const mk = monthKey(today);
+        const monStr = weekMonday(today);
+
+        // Phase card
+        const ph = getCurrentPhase();
+        document.getElementById('dash-phase-card').innerHTML = `
     <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;">
       <div>
         <span class="phase-badge" style="color:${ph.color};border-color:${ph.color}">PHASE ${ph.id}</span>
@@ -721,40 +1409,40 @@ async function renderDashboard() {
       </div>
     </div>`;
 
-  // Month stats
-  const mLogs = logs.filter(l => monthKey(l.date) === mk);
-  const mKm   = mLogs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
-  const tgt   = MONTHLY.find(m => m.m === mk);
-  document.getElementById('d-mon-km').textContent  = mKm.toFixed(1);
-  document.getElementById('d-mon-tgt').textContent = tgt ? `${tgt.distMin}〜${tgt.distMax || '?'}` : '—';
+        // Month stats
+        const mLogs = logs.filter(l => monthKey(l.date) === mk);
+        const mKm = mLogs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
+        const tgt = MONTHLY.find(m => m.m === mk);
+        document.getElementById('d-mon-km').textContent = mKm.toFixed(1);
+        document.getElementById('d-mon-tgt').textContent = tgt ? `${tgt.distMin}〜${tgt.distMax || '?'}` : '—';
 
-  // Week stats（月曜〜今日）
-  const wLogs = logs.filter(l => l.date >= monStr && l.date <= today);
-  document.getElementById('d-wk-cnt').textContent = wLogs.length;
-  document.getElementById('d-wk-km').textContent  = wLogs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0).toFixed(1);
+        // Week stats（月曜〜今日）
+        const wLogs = logs.filter(l => l.date >= monStr && l.date <= today);
+        document.getElementById('d-wk-cnt').textContent = wLogs.length;
+        document.getElementById('d-wk-km').textContent = wLogs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0).toFixed(1);
 
-  // Progress bar
-  if (tgt && tgt.distMax) {
-    const pct   = Math.min(100, Math.round(mKm / tgt.distMax * 100));
-    const color = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--accent)' : 'var(--a3)';
-    document.getElementById('d-prog-lbl').textContent     = `${mKm.toFixed(1)} / ${tgt.distMax} km`;
-    document.getElementById('d-prog-pct').textContent     = pct + '%';
-    document.getElementById('d-prog-bar').style.width     = pct + '%';
-    document.getElementById('d-prog-bar').style.background = color;
-    const remain = Math.max(0, tgt.distMin - mKm);
-    document.getElementById('d-prog-note').textContent =
-      remain > 0 ? `目標下限まであと ${remain.toFixed(1)}km` : '✓ 目標下限達成！';
-  } else {
-    document.getElementById('d-prog-lbl').textContent  = `${mKm.toFixed(1)} km`;
-    document.getElementById('d-prog-note').textContent = tgt ? tgt.note || '' : '';
-  }
+        // Progress bar
+        if (tgt && tgt.distMax) {
+          const pct = Math.min(100, Math.round(mKm / tgt.distMax * 100));
+          const color = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--accent)' : 'var(--a3)';
+          document.getElementById('d-prog-lbl').textContent = `${mKm.toFixed(1)} / ${tgt.distMax} km`;
+          document.getElementById('d-prog-pct').textContent = pct + '%';
+          document.getElementById('d-prog-bar').style.width = pct + '%';
+          document.getElementById('d-prog-bar').style.background = color;
+          const remain = Math.max(0, tgt.distMin - mKm);
+          document.getElementById('d-prog-note').textContent =
+            remain > 0 ? `目標下限まであと ${remain.toFixed(1)}km` : '✓ 目標下限達成！';
+        } else {
+          document.getElementById('d-prog-lbl').textContent = `${mKm.toFixed(1)} km`;
+          document.getElementById('d-prog-note').textContent = tgt ? tgt.note || '' : '';
+        }
 
-  // Today menu
-  const menu = getDayMenu(today);
-  const DOW  = ['日','月','火','水','木','金','土'];
-  const td   = parseLocalDate(today);
-  const isRest = menu.tag === 'rest';
-  document.getElementById('d-today-menu').innerHTML = `
+        // Today menu
+        const menu = getDayMenu(today);
+        const DOW = ['日', '月', '火', '水', '木', '金', '土'];
+        const td = parseLocalDate(today);
+        const isRest = menu.tag === 'rest';
+        document.getElementById('d-today-menu').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--muted);">${DOW[td.getDay()]}曜日</div>
       <span class="mtag mtag-${menu.tag}">${menu.tag.toUpperCase()}</span>
@@ -768,76 +1456,76 @@ async function renderDashboard() {
     </div>`}
     <div style="font-size:11px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace;">${today}</div>`;
 
-  // Quick log form defaults
-  document.getElementById('q-date').value = today;
-  const tagMap = {rest:'easy', easy:'easy', tempo:'tempo', long:'long', race:'race'};
-  document.getElementById('q-type').value = tagMap[menu.tag] || 'easy';
+        // Quick log form defaults
+        document.getElementById('q-date').value = today;
+        const tagMap = { rest: 'easy', easy: 'easy', tempo: 'tempo', long: 'long', race: 'race' };
+        document.getElementById('q-type').value = tagMap[menu.tag] || 'easy';
 
-  // Recent runs
-  const recent = [...logs].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8);
-  if (!recent.length) {
-    document.getElementById('d-recent').innerHTML = '<div class="empty">記録がまだありません</div>';
-    return;
-  }
-  let h = '<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th></tr></thead><tbody>';
-  for (const l of recent) {
-    const isToday = l.date === today;
-    h += `<tr${isToday ? ' class="today-row"' : ''}>
+        // Recent runs
+        const recent = [...logs].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 8);
+        if (!recent.length) {
+          document.getElementById('d-recent').innerHTML = '<div class="empty">記録がまだありません</div>';
+          return;
+        }
+        let h = '<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th></tr></thead><tbody>';
+        for (const l of recent) {
+          const isToday = l.date === today;
+          h += `<tr${isToday ? ' class="today-row"' : ''}>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(l.date)}</td>
-      <td><span class="mtag mtag-${l.type||'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
+      <td><span class="mtag mtag-${l.type || 'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
       <td><strong>${l.dist}</strong> km</td>
       <td style="font-family:'JetBrains Mono',monospace;">${l.pace || '—'}</td>
       <td style="color:var(--muted);font-size:11px;">${l.memo || ''}</td>
     </tr>`;
-  }
-  h += '</tbody></table></div>';
-  document.getElementById('d-recent').innerHTML = h;
-}
+        }
+        h += '</tbody></table></div>';
+        document.getElementById('d-recent').innerHTML = h;
+      }
 
-async function quickLog() {
-  const date = document.getElementById('q-date').value;
-  const dist = document.getElementById('q-dist').value;
-  if (!date || !dist) { toast('日付と距離は必須です'); return; }
-  const logs = await getLogs();
-  logs.push({
-    id:   Date.now(),
-    date,
-    dist: parseFloat(dist),
-    pace: document.getElementById('q-pace').value,
-    type: document.getElementById('q-type').value,
-    memo: document.getElementById('q-memo').value,
-  });
-  await saveLogs(logs);
-  document.getElementById('q-dist').value = '';
-  document.getElementById('q-pace').value = '';
-  document.getElementById('q-memo').value = '';
-  toast('記録しました！');
-  await renderDashboard();
-}
+      async function quickLog() {
+        const date = document.getElementById('q-date').value;
+        const dist = document.getElementById('q-dist').value;
+        if (!date || !dist) { toast('日付と距離は必須です'); return; }
+        const logs = await getLogs();
+        logs.push({
+          id: Date.now(),
+          date,
+          dist: parseFloat(dist),
+          pace: document.getElementById('q-pace').value,
+          type: document.getElementById('q-type').value,
+          memo: document.getElementById('q-memo').value,
+        });
+        await saveLogs(logs);
+        document.getElementById('q-dist').value = '';
+        document.getElementById('q-pace').value = '';
+        document.getElementById('q-memo').value = '';
+        toast('記録しました！');
+        await renderDashboard();
+      }
 
-// ═══ MENU PAGE ═══
+      // ═══ MENU PAGE ═══
 
-function renderCurrentWeekMenu() {
-  const ph = getCurrentPhase();
-  document.getElementById('menu-phase-banner').innerHTML = `
+      function renderCurrentWeekMenu() {
+        const ph = getCurrentPhase();
+        document.getElementById('menu-phase-banner').innerHTML = `
     <div style="display:inline-flex;align-items:center;gap:10px;background:var(--s2);padding:10px 16px;border-left:3px solid ${ph.color};">
       <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:${ph.color}">CURRENT</span>
       <span style="font-size:13px;">Phase ${ph.id}「${ph.name}」${ph.period}</span>
     </div>`;
 
-  const today  = todayStr();
-  const monStr = weekMonday(today);
-  const DOW_JP = ['月','火','水','木','金','土','日'];
+        const today = todayStr();
+        const monStr = weekMonday(today);
+        const DOW_JP = ['月', '火', '水', '木', '金', '土', '日'];
 
-  let h = '<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>日付</th><th>曜</th><th>メニュー</th><th>距離</th><th>時間</th><th>ペース</th></tr></thead><tbody>';
-  for (let i = 0; i < 7; i++) {
-    const base = parseLocalDate(monStr);
-    const d    = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
-    const ds   = localDateStr(d);
-    const menu = getDayMenu(ds);
-    const isToday = ds === today;
-    const isRest = menu.tag === 'rest';
-    h += `<tr${isToday ? ' class="today-row"' : ''}>
+        let h = '<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>日付</th><th>曜</th><th>メニュー</th><th>距離</th><th>時間</th><th>ペース</th></tr></thead><tbody>';
+        for (let i = 0; i < 7; i++) {
+          const base = parseLocalDate(monStr);
+          const d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
+          const ds = localDateStr(d);
+          const menu = getDayMenu(ds);
+          const isToday = ds === today;
+          const isRest = menu.tag === 'rest';
+          h += `<tr${isToday ? ' class="today-row"' : ''}>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(ds)}${isToday ? ' ←' : ''}</td>
       <td style="font-family:'JetBrains Mono',monospace;${isToday ? 'color:var(--accent);font-weight:600;' : ''}">${DOW_JP[i]}</td>
       <td><span class="mtag mtag-${menu.tag}">${menu.tag.toUpperCase()}</span> ${menu.label}</td>
@@ -845,120 +1533,120 @@ function renderCurrentWeekMenu() {
       <td style="font-size:11px;color:${isRest ? 'var(--muted)' : 'var(--accent)'};font-weight:${isRest ? 300 : 600};">${isRest ? '—' : menu.time}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${isRest ? '—' : menu.pace}</td>
     </tr>`;
-  }
-  h += '</tbody></table></div>';
-  document.getElementById('menu-week-table').innerHTML = h;
-}
+        }
+        h += '</tbody></table></div>';
+        document.getElementById('menu-week-table').innerHTML = h;
+      }
 
-// ═══ LOG PAGE ═══
+      // ═══ LOG PAGE ═══
 
-async function addLog() {
-  const date = document.getElementById('l-date').value;
-  const dist = document.getElementById('l-dist').value;
-  if (!date || !dist) { toast('日付と距離は必須です'); return; }
-  const logs = await getLogs();
-  logs.push({
-    id:   Date.now(),
-    date,
-    dist: parseFloat(dist),
-    pace: document.getElementById('l-pace').value,
-    type: document.getElementById('l-type').value,
-    memo: document.getElementById('l-memo').value,
-  });
-  await saveLogs(logs);
-  document.getElementById('l-dist').value = '';
-  document.getElementById('l-pace').value = '';
-  document.getElementById('l-memo').value = '';
-  toast('記録を追加しました');
-  await populateMonthFilter();
-  await renderLogTable();
-}
+      async function addLog() {
+        const date = document.getElementById('l-date').value;
+        const dist = document.getElementById('l-dist').value;
+        if (!date || !dist) { toast('日付と距離は必須です'); return; }
+        const logs = await getLogs();
+        logs.push({
+          id: Date.now(),
+          date,
+          dist: parseFloat(dist),
+          pace: document.getElementById('l-pace').value,
+          type: document.getElementById('l-type').value,
+          memo: document.getElementById('l-memo').value,
+        });
+        await saveLogs(logs);
+        document.getElementById('l-dist').value = '';
+        document.getElementById('l-pace').value = '';
+        document.getElementById('l-memo').value = '';
+        toast('記録を追加しました');
+        await populateMonthFilter();
+        await renderLogTable();
+      }
 
-async function deleteLog(id) {
-  if (!confirm('この記録を削除しますか？')) return;
-  await saveLogs(await getLogs().filter(l => l.id !== id));
-  await populateMonthFilter();
-  await renderLogTable();
-  toast('削除しました');
-}
+      async function deleteLog(id) {
+        if (!confirm('この記録を削除しますか？')) return;
+        await saveLogs(await getLogs().filter(l => l.id !== id));
+        await populateMonthFilter();
+        await renderLogTable();
+        toast('削除しました');
+      }
 
-async function populateMonthFilter() {
-  const logs   = await getLogs();
-  const months = [...new Set(logs.map(l => monthKey(l.date)))].sort().reverse();
-  const sel    = document.getElementById('log-f-month');
-  const cur    = sel.value;
-  sel.innerHTML = '<option value="">全期間</option>';
-  for (const m of months) {
-    const opt = document.createElement('option');
-    opt.value = m;
-    const mt  = MONTHLY.find(x => x.m === m);
-    opt.textContent = mt ? mt.label : m;
-    if (m === cur) opt.selected = true;
-    sel.appendChild(opt);
-  }
-}
+      async function populateMonthFilter() {
+        const logs = await getLogs();
+        const months = [...new Set(logs.map(l => monthKey(l.date)))].sort().reverse();
+        const sel = document.getElementById('log-f-month');
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">全期間</option>';
+        for (const m of months) {
+          const opt = document.createElement('option');
+          opt.value = m;
+          const mt = MONTHLY.find(x => x.m === m);
+          opt.textContent = mt ? mt.label : m;
+          if (m === cur) opt.selected = true;
+          sel.appendChild(opt);
+        }
+      }
 
-async function renderLogTable() {
-  const logs     = await getLogs();
-  const mf       = document.getElementById('log-f-month').value;
-  const tf       = document.getElementById('log-f-type').value;
-  const filtered = logs.filter(l => {
-    if (mf && monthKey(l.date) !== mf) return false;
-    if (tf && l.type !== tf) return false;
-    return true;
-  }).sort((a, b) => b.date.localeCompare(a.date));
+      async function renderLogTable() {
+        const logs = await getLogs();
+        const mf = document.getElementById('log-f-month').value;
+        const tf = document.getElementById('log-f-type').value;
+        const filtered = logs.filter(l => {
+          if (mf && monthKey(l.date) !== mf) return false;
+          if (tf && l.type !== tf) return false;
+          return true;
+        }).sort((a, b) => b.date.localeCompare(a.date));
 
-  if (!filtered.length) {
-    document.getElementById('log-table-wrap').innerHTML = '<div class="empty">記録がありません</div>';
-    return;
-  }
-  let h = '<table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th><th></th></tr></thead><tbody>';
-  for (const l of filtered) {
-    h += `<tr>
+        if (!filtered.length) {
+          document.getElementById('log-table-wrap').innerHTML = '<div class="empty">記録がありません</div>';
+          return;
+        }
+        let h = '<table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th><th></th></tr></thead><tbody>';
+        for (const l of filtered) {
+          h += `<tr>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(l.date)}</td>
-      <td><span class="mtag mtag-${l.type||'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
+      <td><span class="mtag mtag-${l.type || 'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
       <td><strong>${l.dist}</strong> km</td>
       <td style="font-family:'JetBrains Mono',monospace;">${l.pace || '—'}</td>
       <td style="color:var(--muted);font-size:11px;max-width:160px;">${l.memo || ''}</td>
       <td><button class="btn btn-danger" onclick="deleteLog(${l.id})">削除</button></td>
     </tr>`;
-  }
-  h += '</tbody></table>';
-  document.getElementById('log-table-wrap').innerHTML = h;
-}
+        }
+        h += '</tbody></table>';
+        document.getElementById('log-table-wrap').innerHTML = h;
+      }
 
-// ═══ MONTHLY PAGE ═══
+      // ═══ MONTHLY PAGE ═══
 
-let currentMonthView = currentMonthKey();
+      let currentMonthView = currentMonthKey();
 
-function changeMonth(dir) {
-  const [y, m] = currentMonthView.split('-').map(Number);
-  const d = new Date(y, m - 1 + dir, 1);
-  currentMonthView = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-  await renderMonthly();
-}
+      function changeMonth(dir) {
+        const [y, m] = currentMonthView.split('-').map(Number);
+        const d = new Date(y, m - 1 + dir, 1);
+        currentMonthView = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        await renderMonthly();
+      }
 
-async function renderMonthly() {
-  const mk  = currentMonthView;
-  const tgt = MONTHLY.find(x => x.m === mk);
-  const [y] = mk.split('-').map(Number);
-  document.getElementById('m-title').textContent = `${y}年 ${tgt ? tgt.label : mk}`;
+      async function renderMonthly() {
+        const mk = currentMonthView;
+        const tgt = MONTHLY.find(x => x.m === mk);
+        const [y] = mk.split('-').map(Number);
+        document.getElementById('m-title').textContent = `${y}年 ${tgt ? tgt.label : mk}`;
 
-  const logs    = await getLogs().filter(l => monthKey(l.date) === mk);
-  const totalKm = logs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
-  const paces   = logs.map(l => paceToSec(l.pace)).filter(Boolean);
-  const avgPace = paces.length ? Math.round(paces.reduce((a, b) => a + b, 0) / paces.length) : null;
+        const logs = await getLogs().filter(l => monthKey(l.date) === mk);
+        const totalKm = logs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
+        const paces = logs.map(l => paceToSec(l.pace)).filter(Boolean);
+        const avgPace = paces.length ? Math.round(paces.reduce((a, b) => a + b, 0) / paces.length) : null;
 
-  document.getElementById('m-total-km').textContent = totalKm.toFixed(1);
-  document.getElementById('m-count').textContent    = logs.length;
-  document.getElementById('m-avg-pace').textContent = avgPace ? secToPace(avgPace) : '—';
+        document.getElementById('m-total-km').textContent = totalKm.toFixed(1);
+        document.getElementById('m-count').textContent = logs.length;
+        document.getElementById('m-avg-pace').textContent = avgPace ? secToPace(avgPace) : '—';
 
-  // Progress
-  let progH = '';
-  if (tgt && tgt.distMax) {
-    const pct   = Math.min(100, Math.round(totalKm / tgt.distMax * 100));
-    const color = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--accent)' : 'var(--a3)';
-    progH = `
+        // Progress
+        let progH = '';
+        if (tgt && tgt.distMax) {
+          const pct = Math.min(100, Math.round(totalKm / tgt.distMax * 100));
+          const color = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--accent)' : 'var(--a3)';
+          progH = `
       <div class="card-title">月間進捗</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">目標：${tgt.distMin}〜${tgt.distMax}km　10kmペース目標：${tgt.pace}</div>
       <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">
@@ -967,99 +1655,99 @@ async function renderMonthly() {
       </div>
       <div class="prog-wrap"><div class="prog-bar" style="width:${pct}%;background:${color}"></div></div>
       ${tgt.note ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;">${tgt.note}</div>` : ''}`;
-  } else {
-    progH = `<div class="card-title">月間進捗</div>
+        } else {
+          progH = `<div class="card-title">月間進捗</div>
       <div style="font-size:12px;color:var(--muted);">${tgt ? (tgt.note || '参加する場合のみ記録') : 'この月は計画範囲外です'}</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);margin-top:8px;">${totalKm.toFixed(1)} km</div>`;
-  }
-  document.getElementById('m-prog-card').innerHTML = progH;
+        }
+        document.getElementById('m-prog-card').innerHTML = progH;
 
-  // Checklist
-  const checks = MONTH_CHECKS[mk] || ['今月を振り返ってみよう','来月の目標を確認','体調はどうでしたか？'];
-  const mdata  = await getMonthlyData();
-  const saved  = mdata[mk] || {checks:{}, memo:''};
-  let clH = '';
-  for (let i = 0; i < checks.length; i++) {
-    const ck = saved.checks[i] || false;
-    clH += `<div class="check-item" onclick="toggleCheck('${mk}',${i})">
+        // Checklist
+        const checks = MONTH_CHECKS[mk] || ['今月を振り返ってみよう', '来月の目標を確認', '体調はどうでしたか？'];
+        const mdata = await getMonthlyData();
+        const saved = mdata[mk] || { checks: {}, memo: '' };
+        let clH = '';
+        for (let i = 0; i < checks.length; i++) {
+          const ck = saved.checks[i] || false;
+          clH += `<div class="check-item" onclick="toggleCheck('${mk}',${i})">
       <div class="check-box ${ck ? 'checked' : ''}"></div>
       <span class="check-text ${ck ? 'checked' : ''}">${checks[i]}</span>
     </div>`;
-  }
-  document.getElementById('m-checklist').innerHTML = clH;
-  document.getElementById('m-memo').value = saved.memo || '';
+        }
+        document.getElementById('m-checklist').innerHTML = clH;
+        document.getElementById('m-memo').value = saved.memo || '';
 
-  // Runs table
-  if (!logs.length) {
-    document.getElementById('m-runs').innerHTML = '<div class="empty">この月の記録はありません</div>';
-    return;
-  }
-  const sorted = [...logs].sort((a, b) => b.date.localeCompare(a.date));
-  let rH = '<table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th></tr></thead><tbody>';
-  for (const l of sorted) {
-    rH += `<tr>
+        // Runs table
+        if (!logs.length) {
+          document.getElementById('m-runs').innerHTML = '<div class="empty">この月の記録はありません</div>';
+          return;
+        }
+        const sorted = [...logs].sort((a, b) => b.date.localeCompare(a.date));
+        let rH = '<table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th></tr></thead><tbody>';
+        for (const l of sorted) {
+          rH += `<tr>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(l.date)}</td>
-      <td><span class="mtag mtag-${l.type||'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
+      <td><span class="mtag mtag-${l.type || 'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
       <td><strong>${l.dist}</strong> km</td>
       <td style="font-family:'JetBrains Mono',monospace;">${l.pace || '—'}</td>
       <td style="color:var(--muted);font-size:11px;">${l.memo || ''}</td>
     </tr>`;
-  }
-  rH += '</tbody></table>';
-  document.getElementById('m-runs').innerHTML = rH;
-}
+        }
+        rH += '</tbody></table>';
+        document.getElementById('m-runs').innerHTML = rH;
+      }
 
-async function toggleCheck(mk, idx) {
-  const mdata = await getMonthlyData();
-  if (!mdata[mk]) mdata[mk] = {checks:{}, memo:''};
-  mdata[mk].checks[idx] = !mdata[mk].checks[idx];
-  await saveMonthlyData(mdata);
-  await renderMonthly();
-}
+      async function toggleCheck(mk, idx) {
+        const mdata = await getMonthlyData();
+        if (!mdata[mk]) mdata[mk] = { checks: {}, memo: '' };
+        mdata[mk].checks[idx] = !mdata[mk].checks[idx];
+        await saveMonthlyData(mdata);
+        await renderMonthly();
+      }
 
-async function saveMonthlyCheck() {
-  const mk    = currentMonthView;
-  const mdata = await getMonthlyData();
-  if (!mdata[mk]) mdata[mk] = {checks:{}, memo:''};
-  mdata[mk].memo = document.getElementById('m-memo').value;
-  await saveMonthlyData(mdata);
-  toast('保存しました');
-}
+      async function saveMonthlyCheck() {
+        const mk = currentMonthView;
+        const mdata = await getMonthlyData();
+        if (!mdata[mk]) mdata[mk] = { checks: {}, memo: '' };
+        mdata[mk].memo = document.getElementById('m-memo').value;
+        await saveMonthlyData(mdata);
+        toast('保存しました');
+      }
 
-// ═══ PHASE PAGE ═══
+      // ═══ PHASE PAGE ═══
 
-async function renderPhase() {
-  const curPh = getCurrentPhase();
-  const mk    = currentMonthKey();
+      async function renderPhase() {
+        const curPh = getCurrentPhase();
+        const mk = currentMonthKey();
 
-  // Timeline
-  let tlH = '<div class="timeline">';
-  for (const ph of PHASES) {
-    const isCurrent = ph.id === curPh.id;
-    const isPast    = mk > ph.endYM;
-    tlH += `<div class="tl-item ${isCurrent ? 'active' : isPast ? 'done' : ''}">
+        // Timeline
+        let tlH = '<div class="timeline">';
+        for (const ph of PHASES) {
+          const isCurrent = ph.id === curPh.id;
+          const isPast = mk > ph.endYM;
+          tlH += `<div class="tl-item ${isCurrent ? 'active' : isPast ? 'done' : ''}">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
         <span style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:${ph.color};">Phase ${ph.id}</span>
         <span style="font-size:12px;font-weight:500;">${ph.period}「${ph.name}」</span>
         ${isCurrent ? '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;background:var(--accent);color:#000;padding:2px 6px;letter-spacing:1px;">NOW</span>' : ''}
-        ${isPast    ? '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--green);">DONE</span>' : ''}
+        ${isPast ? '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--green);">DONE</span>' : ''}
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">${ph.theme}　月間 ${ph.distMin}〜${ph.distMax || '?'}km</div>
     </div>`;
-  }
-  tlH += '</div>';
-  document.getElementById('ph-timeline').innerHTML = tlH;
+        }
+        tlH += '</div>';
+        document.getElementById('ph-timeline').innerHTML = tlH;
 
-  // Milestone table
-  const logs = await getLogs();
-  let mtH = '';
-  for (const mt of MONTHLY) {
-    const mLogs   = logs.filter(l => monthKey(l.date) === mt.m);
-    const actual  = mLogs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
-    const isCur   = mk === mt.m;
-    const isPastM = mk > mt.m;
-    const achieved = mt.distMax && actual >= mt.distMin;
-    mtH += `<tr style="${isCur ? 'background:var(--s2)' : ''}">
+        // Milestone table
+        const logs = await getLogs();
+        let mtH = '';
+        for (const mt of MONTHLY) {
+          const mLogs = logs.filter(l => monthKey(l.date) === mt.m);
+          const actual = mLogs.reduce((a, b) => a + (parseFloat(b.dist) || 0), 0);
+          const isCur = mk === mt.m;
+          const isPastM = mk > mt.m;
+          const achieved = mt.distMax && actual >= mt.distMin;
+          mtH += `<tr style="${isCur ? 'background:var(--s2)' : ''}">
       <td style="font-family:'JetBrains Mono',monospace;${isCur ? 'color:var(--accent);font-weight:600;' : ''}">${mt.label}${isCur ? ' ★' : ''}</td>
       <td style="font-size:11px;">${mt.distMax ? `${mt.distMin}〜${mt.distMax}km` : mt.distMin ? `${mt.distMin}km+` : '参加時のみ'}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${mt.pace}</td>
@@ -1070,58 +1758,72 @@ async function renderPhase() {
         ${actual > 0 ? (achieved ? '✅' : (isCur ? '🔄' : '⚠️')) : (isPastM ? '—' : '')}
       </td>
     </tr>`;
-  }
-  document.getElementById('ph-milestone').innerHTML = mtH;
-}
+        }
+        document.getElementById('ph-milestone').innerHTML = mtH;
+      }
 
-// ═══ INIT ═══
-// Firebase認証後に呼ばれる（firebase scriptの onAuthStateChanged から window.__appInit() で実行）
 
-window.__appInit = async function() {
-  const t = todayStr();
-  document.getElementById('q-date').value = t;
-  document.getElementById('l-date').value = t;
+      // ═══ WINDOW EXPORTS（moduleスコープ → グローバル公開）═══
+      // <script type="module"> 内の関数はonclickから見えないため明示的に公開する
+      window.showPage = showPage;
+      window.quickLog = quickLog;
+      window.addLog = addLog;
+      window.deleteLog = deleteLog;
+      window.changeMonth = changeMonth;
+      window.toggleCheck = toggleCheck;
+      window.saveMonthlyCheck = saveMonthlyCheck;
+      window.renderLogTable = renderLogTable;
+      // loginWithGoogle / logout は firebase script側で既にwindow.xxxとして定義済み
 
-  // ローディング表示
-  document.getElementById('d-recent').innerHTML = '<div class="empty" style="color:var(--muted)">データを読み込み中...</div>';
+      // ═══ INIT ═══
+      // Firebase認証後に呼ばれる（firebase scriptの onAuthStateChanged から window.__appInit() で実行）
 
-  // 過去実績シードデータ（Firestoreに未登録の場合のみ投入）
-  const SEED_VERSION = 'v5_plan2026';
-  const savedVersion = await window.fsGetSeedVersion();
-  if (savedVersion !== SEED_VERSION) {
-    const existingLogs = await getLogs();
-    if (existingLogs.length === 0) {
-      await saveLogs([
-        // 2026年3月
-        {id:1,  date:'2026-03-05', dist:10.0, pace:"7'48\"", type:'long',       memo:'大会見極め練習'},
-        {id:2,  date:'2026-03-10', dist:2.0,  pace:"7'18\"", type:'easy',       memo:''},
-        {id:3,  date:'2026-03-17', dist:5.0,  pace:"8'05\"", type:'easy',       memo:''},
-        {id:4,  date:'2026-03-22', dist:1.5,  pace:"7'36\"", type:'easy',       memo:''},
-        // 2026年4月
-        {id:5,  date:'2026-04-05', dist:1.6,  pace:"7'50\"", type:'easy',       memo:''},
-        {id:6,  date:'2026-04-12', dist:10.0, pace:"7'23\"", type:'race_event', memo:'大会本番 ネット1:13:00'},
-        {id:7,  date:'2026-04-21', dist:2.0,  pace:"8'09\"", type:'easy',       memo:''},
-        {id:8,  date:'2026-04-22', dist:3.0,  pace:"8'09\"", type:'easy',       memo:''},
-        {id:9,  date:'2026-04-27', dist:3.0,  pace:"8'00\"", type:'easy',       memo:''},
-        {id:10, date:'2026-04-28', dist:4.0,  pace:"7'27\"", type:'long',       memo:''},
-        {id:11, date:'2026-04-30', dist:4.0,  pace:"7'30\"", type:'long',       memo:'トレッドミル'},
-        // 2026年5月
-        {id:12, date:'2026-05-02', dist:6.2,  pace:"7'30\"", type:'easy',       memo:''},
-        {id:13, date:'2026-05-04', dist:6.57, pace:"7'03\"", type:'long',       memo:''},
-        {id:14, date:'2026-05-06', dist:8.0,  pace:"6'35\"", type:'long',       memo:''},
-      ]);
-    }
-    await window.fsSetSeedVersion(SEED_VERSION);
-  }
+      window.__appInit = async function () {
+        const t = todayStr();
+        document.getElementById('q-date').value = t;
+        document.getElementById('l-date').value = t;
 
-  // 月フィルタ初期化
-  await populateMonthFilter();
+        // ローディング表示
+        document.getElementById('d-recent').innerHTML = '<div class="empty" style="color:var(--muted)">データを読み込み中...</div>';
 
-  // ダッシュボード描画
-  await renderDashboard();
-};
-</script>
-<!-- ユーザー情報バー（ナビに追加） -->
-</div><!-- /app-screen -->
+        // 過去実績シードデータ（Firestoreに未登録の場合のみ投入）
+        const SEED_VERSION = 'v5_plan2026';
+        const savedVersion = await window.fsGetSeedVersion();
+        if (savedVersion !== SEED_VERSION) {
+          const existingLogs = await getLogs();
+          if (existingLogs.length === 0) {
+            await saveLogs([
+              // 2026年3月
+              { id: 1, date: '2026-03-05', dist: 10.0, pace: "7'48\"", type: 'long', memo: '大会見極め練習' },
+              { id: 2, date: '2026-03-10', dist: 2.0, pace: "7'18\"", type: 'easy', memo: '' },
+              { id: 3, date: '2026-03-17', dist: 5.0, pace: "8'05\"", type: 'easy', memo: '' },
+              { id: 4, date: '2026-03-22', dist: 1.5, pace: "7'36\"", type: 'easy', memo: '' },
+              // 2026年4月
+              { id: 5, date: '2026-04-05', dist: 1.6, pace: "7'50\"", type: 'easy', memo: '' },
+              { id: 6, date: '2026-04-12', dist: 10.0, pace: "7'23\"", type: 'race_event', memo: '大会本番 ネット1:13:00' },
+              { id: 7, date: '2026-04-21', dist: 2.0, pace: "8'09\"", type: 'easy', memo: '' },
+              { id: 8, date: '2026-04-22', dist: 3.0, pace: "8'09\"", type: 'easy', memo: '' },
+              { id: 9, date: '2026-04-27', dist: 3.0, pace: "8'00\"", type: 'easy', memo: '' },
+              { id: 10, date: '2026-04-28', dist: 4.0, pace: "7'27\"", type: 'long', memo: '' },
+              { id: 11, date: '2026-04-30', dist: 4.0, pace: "7'30\"", type: 'long', memo: 'トレッドミル' },
+              // 2026年5月
+              { id: 12, date: '2026-05-02', dist: 6.2, pace: "7'30\"", type: 'easy', memo: '' },
+              { id: 13, date: '2026-05-04', dist: 6.57, pace: "7'03\"", type: 'long', memo: '' },
+              { id: 14, date: '2026-05-06', dist: 8.0, pace: "6'35\"", type: 'long', memo: '' },
+            ]);
+          }
+          await window.fsSetSeedVersion(SEED_VERSION);
+        }
+
+        // 月フィルタ初期化
+        await populateMonthFilter();
+
+        // ダッシュボード描画
+        await renderDashboard();
+      };
+    </script>
+    <!-- ユーザー情報バー（ナビに追加） -->
+  </div><!-- /app-screen -->
 </body>
+
 </html>
