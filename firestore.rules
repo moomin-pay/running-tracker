@@ -1,0 +1,28 @@
+// Firestore セキュリティルール（Firebaseコンソール → Firestore Database → ルール に貼り付けて「公開」）
+// このファイル自体はGitHub Pagesでは使われない。設定内容の記録用。
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+    // 記録1件の形を検証（index.html の buildLog と同じ条件）
+    function validLog(d) {
+      return d.keys().hasOnly(['id', 'date', 'dist', 'pace', 'type', 'memo'])
+        && d.id is int
+        && d.date is string && d.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && d.dist is number && d.dist > 0 && d.dist < 100
+        && d.pace is string && d.pace.size() <= 20
+        && d.type in ['easy', 'tempo', 'fartlek', 'long', 'race', 'interval', 'race_event']
+        && d.memo is string && d.memo.size() <= 300;
+    }
+    match /users/{userId}/logs/{logId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId) && validLog(request.resource.data);
+    }
+    match /users/{userId}/meta/{docId} {
+      allow read, write: if isOwner(userId) && docId in ['monthly', 'seed'];
+    }
+    // 上記以外はすべて拒否（ルールは明示的に許可したものだけ通る）
+  }
+}

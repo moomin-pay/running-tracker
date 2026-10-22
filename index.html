@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+U2Fta6z5RTmvy2YthL7pg8IibaeD9c3vLDs7E4/gpY=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com; connect-src https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://apis.google.com; frame-src https://running-tracker-db-2e192.firebaseapp.com https://accounts.google.com https://apis.google.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shimpei Runs — Tracker</title>
   <link
@@ -634,10 +635,10 @@
         <div class="card-title">クイック記録</div>
         <div class="form-row">
           <div><label>日付</label><input type="date" id="q-date"></div>
-          <div><label>距離 (km)</label><input type="number" id="q-dist" placeholder="6.5" step="0.1" min="0"></div>
+          <div><label>距離 (km)</label><input type="number" id="q-dist" placeholder="6.5" step="0.01" min="0.01" max="99.99"></div>
         </div>
         <div class="form-row">
-          <div><label>ペース (例: 7'30")</label><input type="text" id="q-pace" placeholder="7'30&quot;"></div>
+          <div><label>ペース (例: 7'30")</label><input type="text" id="q-pace" placeholder="7'30&quot;" maxlength="20"></div>
           <div><label>メニュータイプ</label>
             <select id="q-type">
               <option value="easy">イージーラン</option>
@@ -650,7 +651,7 @@
           </div>
         </div>
         <div class="form-row single">
-          <div><label>メモ</label><input type="text" id="q-memo" placeholder="体調、気温など"></div>
+          <div><label>メモ</label><input type="text" id="q-memo" placeholder="体調、気温など" maxlength="300"></div>
         </div>
         <button class="btn btn-primary" id="btn-quicklog">記録する</button>
       </div>
@@ -821,10 +822,10 @@
         <div class="card-title">新規記録</div>
         <div class="form-row">
           <div><label>日付</label><input type="date" id="l-date"></div>
-          <div><label>距離 (km)</label><input type="number" id="l-dist" placeholder="8.0" step="0.1" min="0"></div>
+          <div><label>距離 (km)</label><input type="number" id="l-dist" placeholder="8.0" step="0.01" min="0.01" max="99.99"></div>
         </div>
         <div class="form-row">
-          <div><label>ペース (例: 7'03")</label><input type="text" id="l-pace" placeholder="7'03&quot;"></div>
+          <div><label>ペース (例: 7'03")</label><input type="text" id="l-pace" placeholder="7'03&quot;" maxlength="20"></div>
           <div><label>メニュータイプ</label>
             <select id="l-type">
               <option value="easy">イージーラン</option>
@@ -837,7 +838,7 @@
           </div>
         </div>
         <div class="form-row single">
-          <div><label>メモ</label><textarea id="l-memo" placeholder="体調・気温・コースなど"></textarea></div>
+          <div><label>メモ</label><textarea id="l-memo" placeholder="体調・気温・コースなど" maxlength="300"></textarea></div>
         </div>
         <button class="btn btn-primary" id="btn-addlog">記録を追加</button>
       </div>
@@ -891,7 +892,7 @@
         <div id="m-checklist"></div>
         <div style="margin-top:12px;">
           <label>フリーメモ（振り返り・気づき・来月への改善点）</label>
-          <textarea id="m-memo" placeholder="今月の振り返りを記録..."></textarea>
+          <textarea id="m-memo" placeholder="今月の振り返りを記録..." maxlength="2000"></textarea>
         </div>
         <button class="btn btn-primary" style="margin-top:8px;font-size:10px;padding:8px 16px;"
           id="btn-save-monthly">保存</button>
@@ -1422,6 +1423,27 @@
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
       }
 
+      // ═══ HTML ESCAPE（自由入力をinnerHTMLへ入れる前に必ず通す）═══
+      function esc(v) {
+        return String(v ?? '').replace(/[&<>"'`]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[ch]));
+      }
+      // クラス名用：英数字・ハイフン・アンダースコア以外を除去
+      function safeClass(v) { return String(v ?? '').replace(/[^a-zA-Z0-9_-]/g, ''); }
+      // 数値として表示（数値でなければ —）
+      function num(v) { const n = Number(v); return Number.isFinite(n) ? n : '—'; }
+
+      // 記録の検証（Firestoreルールと同じ条件。ルール側が最終防壁）
+      const LOG_TYPES = ['easy','tempo','fartlek','long','race','interval','race_event'];
+      function buildLog(date, distStr, pace, type, memo) {
+        const dist = parseFloat(distStr);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return { err: '日付が不正です' };
+        if (!Number.isFinite(dist) || dist <= 0 || dist >= 100) return { err: '距離は0〜100kmで入力してください' };
+        if (pace.length > 20) return { err: 'ペースは20文字以内で入力してください' };
+        if (memo.length > 300) return { err: 'メモは300文字以内で入力してください' };
+        if (!LOG_TYPES.includes(type)) return { err: 'メニュータイプが不正です' };
+        return { log: { id: Date.now(), date, dist, pace, type, memo } };
+      }
+
       // ═══ PACE UTILS ═══
 
       function paceToSec(p) {
@@ -1637,11 +1659,11 @@
         for (const l of recent) {
           const isToday = l.date === today;
           h += `<tr${isToday ? ' class="today-row"' : ''}>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(l.date)}</td>
-      <td><span class="mtag mtag-${l.type || 'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
-      <td><strong>${l.dist}</strong> km</td>
-      <td style="font-family:'JetBrains Mono',monospace;">${l.pace || '—'}</td>
-      <td style="color:var(--muted);font-size:11px;">${l.memo || ''}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${esc(fmtDate(l.date))}</td>
+      <td><span class="mtag mtag-${safeClass(l.type) || 'easy'}">${esc(TYPE_LABELS[l.type] || l.type)}</span></td>
+      <td><strong>${num(l.dist)}</strong> km</td>
+      <td style="font-family:'JetBrains Mono',monospace;">${esc(l.pace) || '—'}</td>
+      <td style="color:var(--muted);font-size:11px;">${esc(l.memo)}</td>
     </tr>`;
         }
         h += '</tbody></table></div>';
@@ -1652,15 +1674,11 @@
         const date = document.getElementById('q-date').value;
         const dist = document.getElementById('q-dist').value;
         if (!date || !dist) { toast('日付と距離は必須です'); return; }
+        const r = buildLog(date, dist, document.getElementById('q-pace').value.trim(),
+          document.getElementById('q-type').value, document.getElementById('q-memo').value);
+        if (r.err) { toast(r.err); return; }
         const logs = await getLogs();
-        logs.push({
-          id: Date.now(),
-          date,
-          dist: parseFloat(dist),
-          pace: document.getElementById('q-pace').value,
-          type: document.getElementById('q-type').value,
-          memo: document.getElementById('q-memo').value,
-        });
+        logs.push(r.log);
         await saveLogs(logs);
         document.getElementById('q-dist').value = '';
         document.getElementById('q-pace').value = '';
@@ -1710,15 +1728,11 @@
         const date = document.getElementById('l-date').value;
         const dist = document.getElementById('l-dist').value;
         if (!date || !dist) { toast('日付と距離は必須です'); return; }
+        const r = buildLog(date, dist, document.getElementById('l-pace').value.trim(),
+          document.getElementById('l-type').value, document.getElementById('l-memo').value);
+        if (r.err) { toast(r.err); return; }
         const logs = await getLogs();
-        logs.push({
-          id: Date.now(),
-          date,
-          dist: parseFloat(dist),
-          pace: document.getElementById('l-pace').value,
-          type: document.getElementById('l-type').value,
-          memo: document.getElementById('l-memo').value,
-        });
+        logs.push(r.log);
         await saveLogs(logs);
         document.getElementById('l-dist').value = '';
         document.getElementById('l-pace').value = '';
@@ -1769,12 +1783,12 @@
         let h = '<table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th><th></th></tr></thead><tbody>';
         for (const l of filtered) {
           h += `<tr>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(l.date)}</td>
-      <td><span class="mtag mtag-${l.type || 'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
-      <td><strong>${l.dist}</strong> km</td>
-      <td style="font-family:'JetBrains Mono',monospace;">${l.pace || '—'}</td>
-      <td style="color:var(--muted);font-size:11px;max-width:160px;">${l.memo || ''}</td>
-      <td><button class="btn btn-danger" onclick="deleteLog(${l.id})">削除</button></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${esc(fmtDate(l.date))}</td>
+      <td><span class="mtag mtag-${safeClass(l.type) || 'easy'}">${esc(TYPE_LABELS[l.type] || l.type)}</span></td>
+      <td><strong>${num(l.dist)}</strong> km</td>
+      <td style="font-family:'JetBrains Mono',monospace;">${esc(l.pace) || '—'}</td>
+      <td style="color:var(--muted);font-size:11px;max-width:160px;">${esc(l.memo)}</td>
+      <td><button class="btn btn-danger" data-action="delete-log" data-id="${Number(l.id) || 0}">削除</button></td>
     </tr>`;
         }
         h += '</tbody></table>';
@@ -1835,7 +1849,7 @@
         let clH = '';
         for (let i = 0; i < checks.length; i++) {
           const ck = saved.checks[i] || false;
-          clH += `<div class="check-item" onclick="toggleCheck('${mk}',${i})">
+          clH += `<div class="check-item" data-action="toggle-check" data-month="${esc(mk)}" data-idx="${i}">
       <div class="check-box ${ck ? 'checked' : ''}"></div>
       <span class="check-text ${ck ? 'checked' : ''}">${checks[i]}</span>
     </div>`;
@@ -1852,11 +1866,11 @@
         let rH = '<table class="tbl"><thead><tr><th>日付</th><th>タイプ</th><th>距離</th><th>ペース</th><th>メモ</th></tr></thead><tbody>';
         for (const l of sorted) {
           rH += `<tr>
-      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(l.date)}</td>
-      <td><span class="mtag mtag-${l.type || 'easy'}">${TYPE_LABELS[l.type] || l.type}</span></td>
-      <td><strong>${l.dist}</strong> km</td>
-      <td style="font-family:'JetBrains Mono',monospace;">${l.pace || '—'}</td>
-      <td style="color:var(--muted);font-size:11px;">${l.memo || ''}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${esc(fmtDate(l.date))}</td>
+      <td><span class="mtag mtag-${safeClass(l.type) || 'easy'}">${esc(TYPE_LABELS[l.type] || l.type)}</span></td>
+      <td><strong>${num(l.dist)}</strong> km</td>
+      <td style="font-family:'JetBrains Mono',monospace;">${esc(l.pace) || '—'}</td>
+      <td style="color:var(--muted);font-size:11px;">${esc(l.memo)}</td>
     </tr>`;
         }
         rH += '</tbody></table>';
@@ -1957,9 +1971,7 @@
       window.showPage = showPage;
       window.quickLog = quickLog;
       window.addLog = addLog;
-      window.deleteLog = deleteLog;
       window.changeMonth = changeMonth;
-      window.toggleCheck = toggleCheck;
       window.saveMonthlyCheck = saveMonthlyCheck;
       window.renderLogTable = renderLogTable;
       // loginWithGoogle / logout は firebase script側で既にwindow.xxxとして定義済み
@@ -1986,6 +1998,18 @@
         if (mf) mf.onchange = () => renderLogTable();
         if (tf) tf.onchange = () => renderLogTable();
 
+        // 動的に生成するボタン類はイベント委譲で処理（インラインonclickを使わない＝CSPで許可不要）
+        const logWrap = document.getElementById('log-table-wrap');
+        if (logWrap) logWrap.onclick = (e) => {
+          const btn = e.target.closest('[data-action="delete-log"]');
+          if (btn) deleteLog(Number(btn.dataset.id));
+        };
+        const checklist = document.getElementById('m-checklist');
+        if (checklist) checklist.onclick = (e) => {
+          const item = e.target.closest('[data-action="toggle-check"]');
+          if (item) toggleCheck(item.dataset.month, Number(item.dataset.idx));
+        };
+
         const t = todayStr();
         document.getElementById('q-date').value = t;
         document.getElementById('l-date').value = t;
@@ -1994,7 +2018,7 @@
         document.getElementById('d-recent').innerHTML = '<div class="empty" style="color:var(--muted)">データを読み込み中...</div>';
 
         // 過去実績シードデータ（Firestoreに未登録の場合のみ投入）
-        const SEED_VERSION = 'v10_osaka_fixed';
+        const SEED_VERSION = 'v10_osaka_fixed';  // v10.1: XSS対策
         const savedVersion = await window.fsGetSeedVersion();
         if (savedVersion !== SEED_VERSION) {
           const existingLogs = await getLogs();
