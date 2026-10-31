@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-+U2Fta6z5RTmvy2YthL7pg8IibaeD9c3vLDs7E4/gpY=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com; connect-src https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://apis.google.com; frame-src https://running-tracker-db-2e192.firebaseapp.com https://accounts.google.com https://apis.google.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YOmq2G/FFeL7cLYwQ/fT3SeWLJZj1Kx30x4O9c8oUgw=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com; connect-src https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://apis.google.com; frame-src https://running-tracker-db-2e192.firebaseapp.com https://accounts.google.com https://apis.google.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shimpei Runs — Tracker</title>
   <link
@@ -1179,9 +1179,9 @@
       const PLAN = {
         // ── 確定レース（2026/10/3 大阪当選により確定。京都は出場しない）──
         races: {
-          mukogawa: { date: '2026-10-25', name: 'にしのみや武庫川ハーフマラソン', dist:'21.1km', time:'目標2:25（制限2:30・関門あり）', pace:"6'50\"〜7'00\"（制限ライン7'07\"）" },
-          hirakata: { date: '2027-01-11', name: 'ひらかたハーフマラソン',         dist:'21.1km', time:'2:54〜2:56（制限3:00・ネット）', pace:"8'15\"〜8'20\"（フル本番のリハーサル）" },
-          osaka:    { date: '2027-02-28', name: '大阪マラソン sub-6',             dist:'42.2km', time:'6:00以内（制限7:00）', pace:"8'30\"（前半は8'40\"で入る）" },
+          mukogawa: { date: '2026-10-25', name: 'にしのみや武庫川ハーフマラソン', dist:'21.1km', time:'結果：ネット2:38:00（グロス2:41:50）', pace:"平均7'29\"／13km以降で失速" },
+          hirakata: { date: '2027-01-11', name: 'ひらかたハーフマラソン',         dist:'21.1km', time:'目安2:53前後（制限3:00・ネット）', pace:"前半8'20\"→余裕あれば後半8'05\"（フル本番リハ＋13kmの壁チェック）" },
+          osaka:    { date: '2027-02-28', name: '大阪マラソン sub-6',             dist:'42.2km', time:'目安5:50〜5:55（制限7:00）', pace:"最初10km 8'40\"→30kmまで8'30\"→余力で上げる／45分ごとジェル" },
         },
 
         phases: [
@@ -1259,63 +1259,80 @@
             }
           },
           {
-            // 週番号: 週0=10/26の週（ハーフ回復）… 週8=12/21の週
+            // 週番号: 週0=10/26の週（ハーフ回復）/ 週1=11/2 … 週9=12/28の週（12/29・12/31のみ）
+            // v11（2026/10/31見直し）：課題＝13km以降の失速（脚の持久力不足）→ 火曜を中距離ジョグ化し「60分超」を週2回に
             id: 4, name: '距離耐性期', period: '10/26〜12/31', color: 'var(--p4)',
             start: '2026-10-26', end: '2026-12-31',
-            distMin: 100, distMax: 145, theme: 'ハーフ回復→ロング走を25kmへ',
+            distMin: 110, distMax: 155, theme: '60分超を週2回（火・土）→ロング25kmへ／スピードより持続',
+            note: "任意4日目（週1まで）：バイク60分（会話できる強度）or ジョグ30分 ／ 筋トレ週2（片脚カーフレイズ・スクワット・スプリットスクワット・ヒップリフト 計15分） ／ ロング平均が8'15\"より速ければ翌週は距離据え置き ／ すね・ふくらはぎに圧痛→火曜休み or バイク、ロングは前週距離へ",
             weekly: {
               tue: [
-                { tag:'rest', label:'完全休養（ハーフ2日後）', dist:'—', time:'—', pace:'—' },            // 週0 10/27
-                { tag:'easy', label:'イージーラン',           dist:'6km',   time:'約46分',    pace:"7'30\"〜7'45\"" }, // 週1
-                { tag:'easy', label:'イージーラン',           dist:'6〜8km', time:'46〜62分', pace:"7'30\"〜7'45\"" }, // 週2〜
+                { tag:'rest', label:'完全休養（ハーフ2日後）', dist:'—',   time:'—',      pace:'—' },              // 週0 10/27
+                { tag:'easy', label:'中距離ジョグ',           dist:'8km',  time:'約65分', pace:"8'00\"〜8'15\"" }, // 週1 11/3
+                { tag:'easy', label:'中距離ジョグ',           dist:'9km',  time:'約73分', pace:"8'00\"〜8'15\"" }, // 週2 11/10
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週3 11/17
+                { tag:'easy', label:'中距離ジョグ（回復週）', dist:'8km',  time:'約65分', pace:"8'00\"〜8'15\"" }, // 週4 11/24
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週5 12/1
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週6 12/8
+                { tag:'easy', label:'中距離ジョグ（回復週）', dist:'8km',  time:'約65分', pace:"8'00\"〜8'15\"" }, // 週7 12/15
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週8 12/22
+                { tag:'easy', label:'中距離ジョグ（軽め）',   dist:'8km',  time:'約65分', pace:"8'00\"〜8'15\"" }, // 週9 12/29
               ],
               thu: [
-                { tag:'easy',  label:'回復ジョグ',       dist:'5km',   time:'約40分',   pace:"8'00\"以上" },     // 週0 10/29
-                { tag:'tempo', label:'閾値走（テンポ）', dist:'5km',   time:'約33分',   pace:"6'30\"〜6'45\"" }, // 週1
-                { tag:'tempo', label:'閾値走（テンポ）', dist:'5〜6km', time:'33〜40分', pace:"6'30\"〜6'45\"" }, // 週2〜
+                { tag:'easy',  label:'回復ジョグ',                 dist:'5km', time:'約40分', pace:"8'00\"以上" },     // 週0 10/29
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" }, // 週1 11/5
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" }, // 週2 11/12
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'6km', time:'約41分', pace:"6'40\"〜6'50\"" }, // 週3 11/19
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" }, // 週4 11/26
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" }, // 週5 12/3
+                { tag:'race',  label:'マラソンペース走（カヤノ）', dist:'6km', time:'約51分', pace:"8'30\"（本番想定）" }, // 週6 12/10
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" }, // 週7 12/17
+                { tag:'race',  label:'マラソンペース走（カヤノ）', dist:'6km', time:'約51分', pace:"8'30\"（本番想定）" }, // 週8 12/24
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" }, // 週9 12/31
               ],
               sat: [
-                { tag:'long', label:'軽めロング（ハーフ回復）', dist:'8km',  time:'約1時間8分',  pace:"8'15\"〜8'45\"" }, // 週0 10/31
-                { tag:'long', label:'ロング走',                 dist:'12km', time:'約1時間42分', pace:"8'15\"〜8'45\"" }, // 週1 11/7
-                { tag:'long', label:'ロング走',                 dist:'15km', time:'約2時間8分',  pace:"8'15\"〜8'45\"" }, // 週2 11/14
-                { tag:'long', label:'ロング走',                 dist:'18km', time:'約2時間33分', pace:"8'15\"〜8'45\"" }, // 週3 11/21
-                { tag:'long', label:'ロング走（回復週）',       dist:'12km', time:'約1時間42分', pace:"8'15\"〜8'45\"" }, // 週4 11/28
-                { tag:'long', label:'ロング走',                 dist:'20km', time:'約2時間50分', pace:"8'15\"〜8'45\"" }, // 週5 12/5
-                { tag:'long', label:'ロング走',                 dist:'22km', time:'約3時間7分',  pace:"8'15\"〜8'45\"" }, // 週6 12/12
-                { tag:'long', label:'ロング走（年内ピーク）',   dist:'25km', time:'約3時間33分', pace:"8'15\"〜8'45\"" }, // 週7 12/19
-                { tag:'long', label:'ロング走（回復週）',       dist:'15km', time:'約2時間8分',  pace:"8'15\"〜8'45\"" }, // 週8 12/26
+                { tag:'long', label:'軽めロング（ハーフ回復）',           dist:'8km',  time:'約1時間8分',  pace:"8'15\"〜8'45\"" }, // 週0 10/31
+                { tag:'long', label:'ロング走',                           dist:'12km', time:'約1時間42分', pace:"8'15\"〜8'45\"" }, // 週1 11/7
+                { tag:'long', label:'ロング走（カヤノ慣らし）',           dist:'15km', time:'約2時間8分',  pace:"8'15\"〜8'45\"" }, // 週2 11/14
+                { tag:'long', label:'ロング走（カヤノ＋ジェル補給テスト）', dist:'18km', time:'約2時間33分', pace:"8'15\"〜8'45\"" }, // 週3 11/21
+                { tag:'long', label:'ロング走（回復週）',                 dist:'12km', time:'約1時間42分', pace:"8'15\"〜8'45\"" }, // 週4 11/28
+                { tag:'long', label:'ロング走（補給：45分ごとジェル）',   dist:'20km', time:'約2時間50分', pace:"8'15\"〜8'45\"" }, // 週5 12/5
+                { tag:'long', label:'ロング走',                           dist:'22km', time:'約3時間7分',  pace:"8'15\"〜8'45\"" }, // 週6 12/12
+                { tag:'long', label:'ロング走（回復週）',                 dist:'14km', time:'約1時間59分', pace:"8'15\"〜8'45\"" }, // 週7 12/19
+                { tag:'long', label:'ロング走（年内ピーク・年末休み）',   dist:'25km', time:'約3時間33分', pace:"8'15\"〜8'45\"" }, // 週8 12/26
               ],
             }
           },
           {
-            // 週番号: 週0=12/28の週 / 週1=1/4の週(ひらかた前) / 週2=1/11の週(ハーフ後) … 週5=2/1の週(30km走)
+            // 週番号: 週0=12/28の週（1/2のみ）/ 週1=1/4(ひらかた前) / 週2=1/11(ハーフ後) / 週3=1/18 / 週4=1/25 / 週5=2/1(30km走)
             id: 5, name: 'ひらかた→30km走期', period: '1/1〜2/8', color: 'var(--p5)',
             start: '2027-01-01', end: '2027-02-08',
-            distMin: 120, distMax: 140, theme: 'ひらかたでフル本番リハ→25km→30km走',
+            distMin: 130, distMax: 140, theme: 'ひらかたで13kmの壁を確認→25km→回復週→30km走',
+            note: "任意4日目（週1まで）：バイク60分 or ジョグ30分 ／ 筋トレ週2（ひらかた・30km走の2日前は休み） ／ 25km・30kmはラスト3〜5kmを8'30\"で（ビルドアップにはしない）",
             weekly: {
               tue: [
-                { tag:'easy', label:'イージーラン',           dist:'5km',    time:'約38分',   pace:"7'30\"〜7'45\"" }, // 週0
-                { tag:'easy', label:'イージーラン（軽め）',   dist:'4km',    time:'約30分',   pace:"7'30\"〜7'45\"" }, // 週1 1/5
-                { tag:'rest', label:'完全休養（ハーフ翌日）', dist:'—',      time:'—',        pace:'—' },              // 週2 1/12
-                { tag:'easy', label:'イージーラン',           dist:'6〜8km', time:'46〜62分', pace:"7'30\"〜7'45\"" }, // 週3
-                { tag:'easy', label:'イージーラン',           dist:'8km',    time:'約61分',   pace:"7'30\"〜7'45\"" }, // 週4
-                { tag:'easy', label:'イージーラン（軽め）',   dist:'6km',    time:'約46分',   pace:"7'30\"〜7'45\"" }, // 週5
+                { tag:'easy', label:'中距離ジョグ（軽め）',   dist:'8km',  time:'約65分', pace:"8'00\"〜8'15\"" }, // 週0（phase4側で表示）
+                { tag:'easy', label:'イージーラン（軽め）',   dist:'6km',  time:'約48分', pace:"7'45\"〜8'00\"" }, // 週1 1/5
+                { tag:'rest', label:'完全休養（ハーフ翌日）', dist:'—',    time:'—',      pace:'—' },              // 週2 1/12
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週3 1/19
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週4 1/26
+                { tag:'easy', label:'中距離ジョグ',           dist:'10km', time:'約81分', pace:"8'00\"〜8'15\"" }, // 週5 2/2
               ],
               thu: [
-                { tag:'easy', label:'イージーラン',               dist:'5km', time:'約38分', pace:"7'30\"〜7'45\"" },   // 週0
-                { tag:'easy', label:'軽いジョグ（ハーフ4日前）',  dist:'3km', time:'約23分', pace:"7'40\"" },          // 週1 1/7
-                { tag:'easy', label:'回復ジョグ',                 dist:'5km', time:'約42分', pace:"8'00\"以上" },      // 週2 1/14
-                { tag:'race', label:'マラソンペース走',           dist:'6km', time:'約51分', pace:"8'30\"（本番想定）" }, // 週3
-                { tag:'race', label:'マラソンペース走',           dist:'8km', time:'約68分', pace:"8'30\"（本番想定）" }, // 週4
-                { tag:'race', label:'マラソンペース走（短め）',   dist:'6km', time:'約51分', pace:"8'30\"（30km走前調整）" }, // 週5
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" },   // 週0（phase4側で表示）
+                { tag:'easy',  label:'軽いジョグ（ハーフ4日前）',  dist:'3km', time:'約24分', pace:"8'00\"" },           // 週1 1/7
+                { tag:'easy',  label:'回復ジョグ',                 dist:'5km', time:'約42分', pace:"8'15\"以上" },       // 週2 1/14
+                { tag:'race',  label:'マラソンペース走（カヤノ）', dist:'8km', time:'約68分', pace:"8'30\"（本番想定）" }, // 週3 1/21
+                { tag:'tempo', label:'閾値走（テンポ）',           dist:'5km', time:'約34分', pace:"6'40\"〜6'50\"" },   // 週4 1/28
+                { tag:'race',  label:'マラソンペース走（短め）',   dist:'6km', time:'約51分', pace:"8'30\"（30km走前調整）" }, // 週5 2/4
               ],
               sat: [
-                { tag:'long', label:'ロング走（ハーフ前・軽め）',  dist:'12km',    time:'約1時間42分',     pace:"8'15\"〜8'45\"" }, // 週0 1/2
-                { tag:'easy', label:'シェイクアウト（ハーフ2日前）', dist:'4km',   time:'約33分',          pace:"8'00\"" },        // 週1 1/9
-                { tag:'easy', label:'軽めジョグ（ハーフ後回復）',  dist:'8km',     time:'約1時間8分',      pace:"8'00\"以上" },    // 週2 1/16
-                { tag:'long', label:'ロング走',                    dist:'20km',    time:'約2時間50分',     pace:"8'15\"〜8'45\"" }, // 週3 1/23
-                { tag:'long', label:'ロング走',                    dist:'25km',    time:'約3時間33分',     pace:"8'15\"〜8'45\"" }, // 週4 1/30
-                { tag:'long', label:'★30km走（最重要）',          dist:'28〜30km', time:'約4時間〜4時間15分', pace:"8'30\"（本番ペース＋本番補給）" }, // 週5 2/6
+                { tag:'long', label:'ロング走（ハーフ9日前）',      dist:'14km',     time:'約1時間59分',        pace:"8'15\"〜8'45\"" }, // 週0 1/2
+                { tag:'easy', label:'シェイクアウト（ハーフ2日前）', dist:'4km',      time:'約33分',             pace:"8'15\"" },        // 週1 1/9
+                { tag:'long', label:'ロング走（ハーフ後・軽め）',    dist:'12km',     time:'約1時間42分',        pace:"8'30\"〜8'45\"" }, // 週2 1/16
+                { tag:'long', label:'ロング走（ラスト3〜5kmは8\'30"）', dist:'25km',  time:'約3時間33分',        pace:"8'15\"〜8'45\"" }, // 週3 1/23
+                { tag:'long', label:'ロング走（回復週）',            dist:'15km',     time:'約2時間8分',         pace:"8'15\"〜8'45\"" }, // 週4 1/30
+                { tag:'long', label:'★30km走（最重要・本番シューズ＋本番補給）', dist:'28〜30km', time:'約4時間〜4時間15分', pace:"8'30\"〜8'45\"（ラスト5kmは8'30\"）" }, // 週5 2/6
               ],
             }
           },
@@ -1323,22 +1340,23 @@
             // 週番号: 週0=2/8の週 / 週1=2/15の週 / 週2=2/22の週(本番直前)
             id: 6, name: 'テーパー期', period: '2/9〜2/28', color: 'var(--a2)',
             start: '2027-02-09', end: '2027-02-28',
-            distMin: 130, distMax: 145, theme: '30km走の疲労を抜き切って大阪へ',
+            distMin: 140, distMax: 150, theme: '30km走の疲労を抜き切って大阪へ',
+            note: "筋トレは2/21以降休止 ／ 本番：最初10km 8'40\"→30kmまで8'30\"→余力で上げる ／ 補給はスタートから45分ごとにジェル",
             weekly: {
               tue: [
-                { tag:'easy', label:'回復ジョグ',   dist:'5km', time:'約40分', pace:"7'40\"以上" },     // 週0 2/9
-                { tag:'easy', label:'イージーラン', dist:'5km', time:'約38分', pace:"7'30\"〜7'45\"" }, // 週1
-                { tag:'easy', label:'軽めジョグ',   dist:'4km', time:'約32分', pace:"8'00\"" },         // 週2
+                { tag:'easy', label:'回復ジョグ',   dist:'6km', time:'約49分', pace:"8'00\"〜8'15\"" }, // 週0 2/9
+                { tag:'easy', label:'イージーラン', dist:'8km', time:'約64分', pace:"7'45\"〜8'00\"" }, // 週1 2/16
+                { tag:'easy', label:'軽めジョグ',   dist:'5km', time:'約40分', pace:"8'00\"" },         // 週2 2/23
               ],
               thu: [
-                { tag:'race', label:'マラソンペース走（短め）', dist:'6km', time:'約51分', pace:"8'30\"" },
-                { tag:'race', label:'マラソンペース走（短め）', dist:'5km', time:'約43分', pace:"8'30\"" },
-                { tag:'easy', label:'刺激入れ（短く）',         dist:'3km', time:'約23分', pace:"8'00\"＋流し3本" },
+                { tag:'race', label:'マラソンペース走（短め）', dist:'6km', time:'約51分', pace:"8'30\"" },             // 週0 2/11
+                { tag:'race', label:'マラソンペース走（短め）', dist:'5km', time:'約43分', pace:"8'30\"" },             // 週1 2/18
+                { tag:'easy', label:'刺激入れ（短く）',         dist:'3km', time:'約24分', pace:"8'00\"＋流し3本" },    // 週2 2/25
               ],
               sat: [
-                { tag:'long', label:'ロング走（テーパー）', dist:'16〜18km', time:'約2時間16分〜2時間33分', pace:"8'15\"〜8'45\"" }, // 週0 2/13
-                { tag:'long', label:'ロング走（削減）',     dist:'12km',     time:'約1時間42分',           pace:"8'15\"〜8'45\"" }, // 週1 2/20
-                { tag:'rest', label:'完全休養（レース前日）', dist:'—', time:'—', pace:'—' },                                         // 週2 2/27
+                { tag:'long', label:'ロング走（テーパー）',   dist:'18km', time:'約2時間33分', pace:"8'15\"〜8'45\"" }, // 週0 2/13
+                { tag:'long', label:'ロング走（削減）',       dist:'12km', time:'約1時間42分', pace:"8'15\"〜8'45\"" }, // 週1 2/20
+                { tag:'rest', label:'完全休養（レース前日）', dist:'—',    time:'—',           pace:'—' },              // 週2 2/27
               ],
             }
           },
@@ -1352,10 +1370,10 @@
           { m: '2026-08', label: '8月',  distMin: 55,  distMax: 65,  pace: '時間・継続で管理',         note: '8/5 ロング走オーバーペースで負傷→休養→8/18復帰' },
           { m: '2026-09', label: '9月',  distMin: 75,  distMax: 90,  pace: "ロング8'15\"〜8'45\"",    note: '武庫川ハーフに向け漸増' },
           { m: '2026-10', label: '10月', distMin: 105, distMax: 120, pace: "本番6'50\"〜7'00\"",      note: '★10/25 武庫川ハーフ（制限2:30）／計画積算117km' },
-          { m: '2026-11', label: '11月', distMin: 95,  distMax: 110, pace: "ロング8'15\"〜8'45\"",    note: 'ハーフ回復→ロング走12→18km／計画積算106km' },
-          { m: '2026-12', label: '12月', distMin: 130, distMax: 145, pace: "ロング8'15\"〜8'45\"",    note: 'ロング走20→22→25km／計画積算145km' },
-          { m: '2027-01', label: '1月',  distMin: 120, distMax: 135, pace: "ひらかた8'15\"〜8'20\"",  note: '★1/11 ひらかたハーフ→20→25km／計画積算131km' },
-          { m: '2027-02', label: '2月',  distMin: 130, distMax: 145, pace: "本番8'30\"",              note: '★2/6 30km走→テーパー→2/28大阪（42.2km含む）／計画積算141km' },
+          { m: '2026-11', label: '11月', distMin: 105, distMax: 115, pace: "火8'00\"〜8'15\"／ロング8'15\"〜8'45\"", note: '火曜中距離ジョグ化＋ロング12→15→18km／計画積算113km' },
+          { m: '2026-12', label: '12月', distMin: 140, distMax: 155, pace: "ロング8'15\"〜8'45\"／MP8'30\"",        note: 'ロング走20→22→(回復14)→25km／計画積算154km' },
+          { m: '2027-01', label: '1月',  distMin: 130, distMax: 140, pace: "ひらかた前半8'20\"",                     note: '★1/11 ひらかたハーフ→25km→回復週15km／計画積算138km' },
+          { m: '2027-02', label: '2月',  distMin: 140, distMax: 155, pace: "本番8'30\"",                            note: '★2/6 30km走→テーパー→2/28大阪（42.2km含む）／計画積算151km' },
         ],
 
         monthChecks: {
@@ -1365,9 +1383,9 @@
           '2026-08': ['痛み(膝・ふくらはぎ)完全に引いた？', '8/18から無理せず復帰できた？', '★8/28 大阪マラソン申込済？'],
           '2026-09': ['★9/7 武庫川ハーフ エントリー済？（先着）', '★9/28 大阪マラソン抽選結果', 'ロング走ペース死守できてる？'],
           '2026-10': ['★大阪マラソン 参加料入金済？（期限は当選メール記載）', '★10/18締切 ひらかたハーフ申込済？（先着）', '★10/25 武庫川ハーフ 2:30以内で完走？', 'フル本番シューズ決めた？（SB3 or カヤノ）'],
-          '2026-11': ['ハーフ後1週間は回復に徹した？', 'ロング走18kmまで伸ばせた？', 'ジェル補給を試した？', 'すね・ふくらはぎに違和感ない？'],
-          '2026-12': ['ロング走25kmまで到達？', '本番シューズで20km以上走った？', '年末年始も週3維持できた？'],
-          '2027-01': ["★1/11 ひらかたハーフ 8'15\"〜8'20\"で走れた？", 'ハーフ後の回復スムーズ？', '25km走こなせた？'],
+          '2026-11': ['ハーフ後1週間は回復に徹した？', 'カヤノ33で15km以上×2〜3回、土踏まず・すねに違和感なし？', '11/21 18km走でジェル補給を試した？', "ロング平均を8'15\"より遅く守れた？", '筋トレ週2回できた？'],
+          '2026-12': ['12/26 ロング走25kmこなせた？', "マラソンペース8'30\"を体で覚えた？", '本番シューズで20km以上走った？', '年末年始も週3維持できた？'],
+          '2027-01': ["★1/11 ひらかた 前半8'20\"→2:53前後で完走？", 'ひらかたで13km以降も脚が残った？', '1/23 25km走こなせた？'],
           '2027-02': ['★2/6 30km走こなせた？', 'テーパー実施済み？', '★2/28 大阪マラソン sub-6達成？'],
         },
       };
@@ -1579,6 +1597,7 @@
         <span class="phase-badge" style="color:${ph.color};border-color:${ph.color}">PHASE ${ph.id}</span>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:${ph.color};letter-spacing:1px;">${ph.period}「${ph.name}」</div>
         <div style="font-size:12px;color:var(--muted);margin-top:4px;">${ph.theme}</div>
+        ${ph.note ? `<div style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.6;">📝 ${esc(ph.note)}</div>` : ''}
       </div>
       <div style="text-align:right;">
         <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;">月間距離目標</div>
@@ -1936,6 +1955,7 @@
         ${isPast ? '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:var(--green);">DONE</span>' : ''}
       </div>
       <div style="font-size:11px;color:var(--muted);margin-top:2px;">${ph.theme}　月間 ${ph.distMin}〜${ph.distMax || '?'}km</div>
+      ${ph.note ? `<div style="font-size:11px;color:var(--muted);margin-top:4px;line-height:1.6;">📝 ${esc(ph.note)}</div>` : ''}
     </div>`;
         }
         tlH += '</div>';
