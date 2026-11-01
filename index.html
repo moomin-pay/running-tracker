@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YOmq2G/FFeL7cLYwQ/fT3SeWLJZj1Kx30x4O9c8oUgw=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com; connect-src https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://apis.google.com; frame-src https://running-tracker-db-2e192.firebaseapp.com https://accounts.google.com https://apis.google.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-SyT4/vl8bHu0xMT/eYyMD5FAMgkMA/WCqhxEVwiBkaM=' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.googleusercontent.com; connect-src https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://apis.google.com; frame-src https://running-tracker-db-2e192.firebaseapp.com https://accounts.google.com https://apis.google.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shimpei Runs — Tracker</title>
   <link
@@ -663,7 +663,12 @@
 
     <!-- MENU -->
     <div class="page" id="page-menu">
-      <div class="sec-title">今週のメニュー</div>
+      <div class="sec-title" id="menu-week-title">今週のメニュー</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="btn" id="btn-week-prev" type="button">← 前の週</button>
+        <button class="btn" id="btn-week-now" type="button">今週</button>
+        <button class="btn" id="btn-week-next" type="button">次の週 →</button>
+      </div>
       <div id="menu-phase-banner" style="margin-bottom:12px;"></div>
       <div class="card" id="menu-week-table"></div>
       <div class="sec-title" style="margin-top:28px;">フェーズ別メニュー</div>
@@ -714,53 +719,55 @@
         <div class="note" style="margin-top:8px;">火曜はイージー6km（7'30"〜7'45"）。<strong>土曜ロング走は必ず8'15"〜8'45"</strong>。レースペースの練習は木曜に限定し、土曜と役割を混ぜない。</div>
       </div>
 
-      <div class="phase-header" style="color:var(--p4)">Phase 4｜10/26〜12/31「距離耐性期」<span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;"> 月間95〜145km</span></div>
-      <div class="card">
+      <div class="phase-header" style="color:var(--p4)">Phase 4｜10/26〜12/31「距離耐性期」<span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;"> 月間 11月113km／12月154km</span></div>
+      <div class="card" style="overflow-x:auto;">
         <table class="tbl">
-          <thead><tr><th>週</th><th>期間</th><th>土曜ロング走</th><th>ポイント</th></tr></thead>
+          <thead><tr><th>週</th><th>期間</th><th>火</th><th>木</th><th>土</th><th>ポイント</th></tr></thead>
           <tbody>
-            <tr><td>週0</td><td>10/26〜11/1</td><td>8km</td><td>ハーフ回復週。火は休養、木は回復ジョグ</td></tr>
-            <tr><td>週1</td><td>11/2〜11/8</td><td>12km</td><td>通常メニューに復帰</td></tr>
-            <tr><td>週2</td><td>11/9〜11/15</td><td>15km</td><td>ジェル補給の練習開始</td></tr>
-            <tr><td>週3</td><td>11/16〜11/22</td><td>18km</td><td>—</td></tr>
-            <tr><td>週4</td><td>11/23〜11/29</td><td>12km（回復週）</td><td>脚を戻す</td></tr>
-            <tr><td>週5</td><td>11/30〜12/6</td><td>20km</td><td>本番シューズで走る</td></tr>
-            <tr><td>週6</td><td>12/7〜12/13</td><td>22km</td><td>—</td></tr>
-            <tr style="background:#0a1a2a;"><td>週7</td><td>12/14〜12/20</td><td><strong>25km（年内ピーク）</strong></td><td>約3時間30分。補給を本番通りに</td></tr>
-            <tr><td>週8</td><td>12/21〜12/27</td><td>15km（回復週）</td><td>年末の疲労抜き</td></tr>
+            <tr><td>週0</td><td>10/26〜11/1</td><td>休養</td><td>回復ジョグ5km</td><td>8km</td><td>ハーフ回復週</td></tr>
+            <tr><td>週1</td><td>11/2〜11/8</td><td>中距離8km</td><td>テンポ5km</td><td>12km</td><td>11/3からカヤノ慣らし</td></tr>
+            <tr><td>週2</td><td>11/9〜11/15</td><td>中距離9km</td><td>テンポ5km</td><td>15km</td><td>カヤノで</td></tr>
+            <tr><td>週3</td><td>11/16〜11/22</td><td>中距離10km</td><td>テンポ6km</td><td>18km</td><td>カヤノ＋ジェル補給テスト</td></tr>
+            <tr><td>週4</td><td>11/23〜11/29</td><td>中距離8km</td><td>テンポ5km</td><td>12km（回復週）</td><td>脚を戻す</td></tr>
+            <tr><td>週5</td><td>11/30〜12/6</td><td>中距離10km</td><td>テンポ5km</td><td>20km</td><td>45分ごとジェル</td></tr>
+            <tr><td>週6</td><td>12/7〜12/13</td><td>中距離10km</td><td>MP 6km</td><td>22km</td><td>木曜は8'30"をカヤノで</td></tr>
+            <tr><td>週7</td><td>12/14〜12/20</td><td>中距離8km</td><td>テンポ5km</td><td>14km（回復週）</td><td>脚を戻す</td></tr>
+            <tr style="background:#0a1a2a;"><td>週8</td><td>12/21〜12/27</td><td>中距離10km</td><td>MP 6km</td><td><strong>25km（年内ピーク）</strong></td><td>12/26・約3時間33分</td></tr>
+            <tr><td>週9</td><td>12/28〜12/31</td><td>中距離8km</td><td>テンポ5km</td><td>（1/2はPhase5）</td><td>年末年始も週3維持</td></tr>
           </tbody>
         </table>
-        <div class="note">火：イージー6〜8km（7'30"〜7'45"）／木：閾値走5〜6km（6'30"〜6'45"）／土：ロング走（8'15"〜8'45"）</div>
+        <div class="note" style="margin-top:8px;">火：中距離ジョグ（8'00"〜8'15"・60〜80分）／木：閾値走（6'40"〜6'50"）or マラソンペース走（8'30"）／土：ロング走（<strong>8'15"〜8'45"を死守</strong>）。60分超を週2回つくり、13km以降の失速を克服する。</div>
       </div>
 
-      <div class="phase-header" style="color:var(--p5)">Phase 5｜1/1〜2/8「ひらかた→30km走期」<span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;"> 月間120〜140km</span></div>
-      <div class="card">
+      <div class="phase-header" style="color:var(--p5)">Phase 5｜1/1〜2/8「ひらかた→30km走期」<span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;"> 月間 1月138km</span></div>
+      <div class="card" style="overflow-x:auto;">
         <table class="tbl">
-          <thead><tr><th>週</th><th>期間</th><th>土曜メニュー</th><th>ポイント</th></tr></thead>
+          <thead><tr><th>週</th><th>期間</th><th>火</th><th>木</th><th>土</th><th>ポイント</th></tr></thead>
           <tbody>
-            <tr><td>週0</td><td>12/28〜1/3</td><td>ロング走 12km</td><td>ひらかたに向け軽め</td></tr>
-            <tr><td>週1</td><td>1/4〜1/10</td><td>シェイクアウト 4km（1/9）</td><td>レース2日前</td></tr>
-            <tr style="background:#1a2a0a;"><td colspan="2"><strong>1/11(月・祝)</strong></td><td colspan="2"><span class="mtag mtag-race_event">RACE</span> <strong>🏁 ひらかたハーフ　8'15"〜8'20"（2:54〜2:56）／制限3:00</strong></td></tr>
-            <tr><td>週2</td><td>1/11〜1/17</td><td>軽めジョグ 8km</td><td>1/12は完全休養</td></tr>
-            <tr><td>週3</td><td>1/18〜1/24</td><td>ロング走 20km</td><td>木曜からマラソンペース走(8'30")開始</td></tr>
-            <tr><td>週4</td><td>1/25〜1/31</td><td>ロング走 25km</td><td>—</td></tr>
-            <tr style="background:#2a1a0a;"><td>週5</td><td>2/1〜2/7</td><td><strong>★30km走（2/6）</strong></td><td><strong>本番22日前。本番ペース・本番補給・本番シューズで</strong></td></tr>
+            <tr><td>週0</td><td>1/1〜1/3</td><td>—</td><td>—</td><td>14km（1/2）</td><td>ハーフ9日前</td></tr>
+            <tr><td>週1</td><td>1/4〜1/10</td><td>6km（軽め）</td><td>3km（軽め）</td><td>シェイクアウト4km</td><td>レース2日前</td></tr>
+            <tr style="background:#1a2a0a;"><td colspan="2"><strong>1/11(月・祝)</strong></td><td colspan="4"><span class="mtag mtag-race_event">RACE</span> <strong>🏁 ひらかたハーフ　前半8'20"→余裕あれば後半8'05"（目安2:53）／制限3:00</strong></td></tr>
+            <tr><td>週2</td><td>1/11〜1/17</td><td>休養</td><td>回復ジョグ5km</td><td>12km（軽め）</td><td>ハーフ後の回復</td></tr>
+            <tr><td>週3</td><td>1/18〜1/24</td><td>中距離10km</td><td>MP 8km</td><td><strong>25km</strong></td><td>ラスト3〜5kmは8'30"</td></tr>
+            <tr><td>週4</td><td>1/25〜1/31</td><td>中距離10km</td><td>テンポ5km</td><td>15km（回復週）</td><td>30km走に向け脚を戻す</td></tr>
+            <tr style="background:#2a1a0a;"><td>週5</td><td>2/1〜2/7</td><td>中距離10km</td><td>MP 6km</td><td><strong>★30km走（2/6）</strong></td><td>本番シューズ・本番補給。ラスト5kmは8'30"</td></tr>
           </tbody>
         </table>
-        <div class="note" style="margin-top:8px;">ひらかたはタイムを狙わない。フル本番と同じペース・補給・シューズで21kmを走る「本番のリハーサル」。</div>
+        <div class="note" style="margin-top:8px;">ひらかたは本番リハーサル＋「13kmの壁」の確認。25kmの翌週は必ず回復週にして、30km走を元気な状態で迎える。</div>
       </div>
 
-      <div class="phase-header" style="color:var(--a2)">Phase 6｜2/9〜2/28「テーパー期」<span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;"> 月間130〜145km（本番42.2km含む）</span></div>
-      <div class="card">
+      <div class="phase-header" style="color:var(--a2)">Phase 6｜2/9〜2/28「テーパー期」<span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;"> 月間 2月151km（本番42.2km含む）</span></div>
+      <div class="card" style="overflow-x:auto;">
         <table class="tbl">
-          <thead><tr><th>週</th><th>期間</th><th>土曜ロング走</th><th>ポイント</th></tr></thead>
+          <thead><tr><th>週</th><th>期間</th><th>火</th><th>木</th><th>土</th><th>ポイント</th></tr></thead>
           <tbody>
-            <tr><td>週0</td><td>2/8〜2/14</td><td>16〜18km</td><td>30km走からの回復を見ながら</td></tr>
-            <tr><td>週1</td><td>2/15〜2/21</td><td>12km（削減）</td><td>量を落としペースは維持</td></tr>
-            <tr><td>週2</td><td>2/22〜2/27</td><td>2/27は完全休養</td><td>走らない勇気。木曜に短い刺激のみ</td></tr>
-            <tr style="background:#2a0a0a;"><td colspan="2"><strong>2/28(日)</strong></td><td colspan="2"><span class="mtag mtag-race_event">RACE</span> <strong>🏁 大阪マラソン sub-6:00:00（8'30"/km）</strong></td></tr>
+            <tr><td>週0</td><td>2/8〜2/14</td><td>回復6km</td><td>MP 6km</td><td>18km</td><td>30km走からの回復を見ながら</td></tr>
+            <tr><td>週1</td><td>2/15〜2/21</td><td>8km</td><td>MP 5km</td><td>12km（削減）</td><td>量を落としペースは維持</td></tr>
+            <tr><td>週2</td><td>2/22〜2/27</td><td>5km</td><td>3km＋流し</td><td>完全休養（2/27）</td><td>走らない勇気</td></tr>
+            <tr style="background:#2a0a0a;"><td colspan="2"><strong>2/28(日)</strong></td><td colspan="4"><span class="mtag mtag-race_event">RACE</span> <strong>🏁 大阪マラソン sub-6　最初10km 8'40"→30kmまで8'30"→余力で上げる</strong></td></tr>
           </tbody>
         </table>
+        <div class="note" style="margin-top:8px;">補給はスタートから45分ごとにジェル。筋トレは2/21以降休止。</div>
       </div>
 
       <div class="sec-title">📊 ペース設定の根拠</div>
@@ -770,9 +777,10 @@
           <tbody>
             <tr><td>4/12 10km大会 1:13:00</td><td>2:41（7'38"）</td><td>5:36</td><td>半年前の実績。下限の目安</td></tr>
             <tr><td>7/12 閾値走 6.89km @6'29"</td><td>2:26（6'56"）</td><td>—</td><td>直近の実力に近い</td></tr>
+            <tr style="background:#161606;"><td><strong>10/25 武庫川ハーフ ネット2:38:00</strong></td><td>実測（7'29"）</td><td><strong>5:29</strong></td><td>最新の実績。13km以降で失速</td></tr>
           </tbody>
         </table>
-        <div class="note" style="margin:10px;">武庫川は制限2:30（7'07"）に対し換算2:26で<strong>余裕は小さい</strong>。スタートロスや給水を見込んで目標2:25（6'52"）とし、木曜のレースペース走で6'50"〜7'00"を体に入れる。大阪sub-6（8'30"）は換算より約30秒/km遅い保守的設定で、初フルの限界要因である<strong>距離耐性</strong>を優先している。</div>
+        <div class="note" style="margin:10px;">武庫川ハーフ（2:38）からのフル換算は5:29。初フルの後半失速を20〜30分見込んでも<strong>sub-6は射程内</strong>。一方、9月のテンポ走（5km 5'37"）とハーフの差が大きく、課題はスピードではなく<strong>脚の持久力（60分超の連続負荷への耐性）</strong>。</div>
       </div>
 
       <div class="sec-title">🎯 練習ペース一覧</div>
@@ -780,17 +788,17 @@
         <table class="tbl">
           <thead><tr><th>メニュー</th><th>ペース</th><th>目的</th><th>使う時期</th></tr></thead>
           <tbody>
-            <tr><td><span class="mtag mtag-easy">EASY</span> イージー</td><td><strong>7'30"〜7'45"</strong></td><td>有酸素・回復</td><td>通年（火曜）</td></tr>
+            <tr><td><span class="mtag mtag-easy">EASY</span> 中距離ジョグ</td><td><strong>8'00"〜8'15"</strong></td><td>60分超の持久力・脚の耐性</td><td>11月〜（火曜・60〜80分）</td></tr>
             <tr style="background:#161606;"><td><span class="mtag mtag-long">LONG</span> ロング走</td><td><strong>8'15"〜8'45"</strong></td><td>距離耐性・着地耐性</td><td>通年（土曜）。<strong>速く走らない</strong></td></tr>
-            <tr><td><span class="mtag mtag-tempo">TEMPO</span> 閾値走</td><td><strong>6'30"〜6'45"</strong></td><td>乳酸処理能力</td><td>9月〜12月（木曜）</td></tr>
+            <tr><td><span class="mtag mtag-tempo">TEMPO</span> 閾値走</td><td><strong>6'40"〜6'50"</strong></td><td>心肺の維持（追い込まない）</td><td>9月〜1月（木曜）</td></tr>
             <tr><td><span class="mtag mtag-race">RACE</span> レースペース走（武庫川）</td><td><strong>6'50"〜7'00"</strong></td><td>ハーフ本番ペースの体得</td><td>10/8・10/15（木曜）</td></tr>
-            <tr><td><span class="mtag mtag-race">RACE</span> マラソンペース走</td><td><strong>8'30"</strong></td><td>フル本番ペースの体得</td><td>1/21〜2/18（木曜）</td></tr>
+            <tr><td><span class="mtag mtag-race">RACE</span> マラソンペース走</td><td><strong>8'30"</strong></td><td>フル本番ペースの体得（カヤノで）</td><td>12/10〜2/18（木曜）</td></tr>
             <tr style="color:var(--muted);"><td>インターバル</td><td>—</td><td>—</td><td>怪我防止のため実施しない</td></tr>
           </tbody>
         </table>
       </div>
 
-      <div class="sec-title">補強運動（週2回・5分）</div>
+      <div class="sec-title">補強運動（週2回・15分）</div>
       <div class="grid4">
         <div class="stat">
           <div class="stat-label">カーフレイズ</div>
@@ -1708,17 +1716,25 @@
 
       // ═══ MENU PAGE ═══
 
+      let menuWeekOffset = 0; // 0=今週、+1=来週、-1=先週
       function renderCurrentWeekMenu() {
-        const ph = getCurrentPhase();
+        const today = todayStr();
+        const tb = parseLocalDate(weekMonday(today));
+        const monStr = localDateStr(new Date(tb.getFullYear(), tb.getMonth(), tb.getDate() + menuWeekOffset * 7));
+        const sunD = parseLocalDate(monStr); sunD.setDate(sunD.getDate() + 6);
+        const label = menuWeekOffset === 0 ? '今週' : menuWeekOffset === 1 ? '来週' : menuWeekOffset === -1 ? '先週'
+                    : (menuWeekOffset > 0 ? `${menuWeekOffset}週間後` : `${-menuWeekOffset}週間前`);
+        document.getElementById('menu-week-title').textContent =
+          `${label}のメニュー（${fmtDate(monStr).slice(5)}〜${fmtDate(localDateStr(sunD)).slice(5)}）`;
+        const ph = PLAN.phases.find(p => monStr <= p.end && localDateStr(sunD) >= p.start) || getCurrentPhase();
         document.getElementById('menu-phase-banner').innerHTML = `
     <div style="display:inline-flex;align-items:center;gap:10px;background:var(--s2);padding:10px 16px;border-left:3px solid ${ph.color};">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:${ph.color}">CURRENT</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:${ph.color}">${menuWeekOffset === 0 ? 'CURRENT' : 'PHASE'}</span>
       <span style="font-size:13px;">Phase ${ph.id}「${ph.name}」${ph.period}</span>
     </div>`;
 
-        const today = todayStr();
-        const monStr = weekMonday(today);
         const DOW_JP = ['月', '火', '水', '木', '金', '土', '日'];
+        let weekKm = 0;
 
         let h = '<div style="overflow-x:auto;"><table class="tbl"><thead><tr><th>日付</th><th>曜</th><th>メニュー</th><th>距離</th><th>時間</th><th>ペース</th></tr></thead><tbody>';
         for (let i = 0; i < 7; i++) {
@@ -1728,6 +1744,7 @@
           const menu = getDayMenu(ds);
           const isToday = ds === today;
           const isRest = menu.tag === 'rest';
+          weekKm += parseFloat(String(menu.dist).replace(/^.*?〜/, '')) || 0;
           h += `<tr${isToday ? ' class="today-row"' : ''}>
       <td style="font-family:'JetBrains Mono',monospace;font-size:11px;white-space:nowrap;">${fmtDate(ds)}${isToday ? ' ←' : ''}</td>
       <td style="font-family:'JetBrains Mono',monospace;${isToday ? 'color:var(--accent);font-weight:600;' : ''}">${DOW_JP[i]}</td>
@@ -1738,6 +1755,7 @@
     </tr>`;
         }
         h += '</tbody></table></div>';
+        h += `<div class="note" style="margin-top:8px;">週合計（計画）：約${Math.round(weekKm * 10) / 10}km</div>`;
         document.getElementById('menu-week-table').innerHTML = h;
       }
 
@@ -2011,6 +2029,9 @@
         bind('btn-prev-month', () => changeMonth(-1));
         bind('btn-next-month', () => changeMonth(1));
         bind('btn-save-monthly', () => saveMonthlyCheck());
+        bind('btn-week-prev', () => { menuWeekOffset--; renderCurrentWeekMenu(); });
+        bind('btn-week-now',  () => { menuWeekOffset = 0; renderCurrentWeekMenu(); });
+        bind('btn-week-next', () => { menuWeekOffset++; renderCurrentWeekMenu(); });
 
         // セレクトのchangeイベント
         const mf = document.getElementById('log-f-month');
